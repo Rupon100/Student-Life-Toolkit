@@ -8,6 +8,7 @@ const AuthProvider = ({children}) => {
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
 
+
     // register
     const createUser = (email, pass) => {
         setLoading(false);
@@ -41,7 +42,7 @@ const AuthProvider = ({children}) => {
         user,
         createUser,
         loginUser,
-        logout
+        logout,
     }
 
     return (
