@@ -5,10 +5,27 @@ import overview from "../../assets/images/statistics.png";
 import budget from "../../assets/images/budget.png";
 import studyPlanner from "../../assets/images/pencil.png";
 import quiz from "../../assets/images/quiz.png";
+import useAuth from "../../AuthProvider/useAuth";
+import axios from 'axios';
+import toast from 'react-hot-toast'
+import { useQuery } from "@tanstack/react-query";
 
 const Classes = () => {
 
   const [ day, setDay ] = useState(null);
+  const { user } = useAuth();
+  console.log(user?.email)
+
+
+  const { data: classes, isLoading, error, refetch } = useQuery({
+    queryKey: ['classes', user?.email],
+    queryFn: async () => {
+      const res = await fetch('http://localhost:4080/classes');
+      return res.json();
+    }
+  })
+
+  console.log(classes)
 
 
   const handleAdd = (e) => {
@@ -18,8 +35,19 @@ const Classes = () => {
     const instructor = form.instructor.value;
     const startTime = form.initial_time.value;
     const endTime = form.ending_time.value;
-    const schedule = { subject, instructor, day, startTime, endTime };
-    console.log(schedule)
+    const schedule = { user: user?.email, subject, instructor, day, startTime, endTime };
+    console.log(schedule);
+
+    axios.post('http://localhost:4080/classes', schedule)
+    .then(res => {
+      console.log(res?.data?.insertedId);
+      if(res?.data?.insertedId){
+        refetch();
+        toast.success("Class added to schedule!");
+        form.reset();
+      }
+    })
+
   }
 
   return (
@@ -105,7 +133,12 @@ const Classes = () => {
           <input className="btn btn-neutral" type="submit" value="Add" />
         </form>
 
-        <div>show all the classes list</div>
+        <div>
+          {
+            isLoading ? <h2>Loading...</h2> :  <h2>show all the classes list:   {classes.length}</h2>
+          }
+         
+        </div>
       </div>
     </div>
   );
