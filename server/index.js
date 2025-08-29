@@ -206,8 +206,6 @@ async function run() {
           status: value
         }
       }
-
-
       const result = await plannerCollection.updateOne(filter, updateDoc, options);
       res.send(result);
 
