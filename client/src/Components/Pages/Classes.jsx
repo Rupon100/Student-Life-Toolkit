@@ -75,7 +75,7 @@ const Classes = () => {
     queryKey: ["classes", user?.email, day, start, end],
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:4080/classes`
+        `http://localhost:4080/classes/${user?.email}`
       );
       return res.json();
     },
@@ -103,17 +103,18 @@ const Classes = () => {
         {/* input form */}
         <form
           onSubmit={(e) => handleAdd(e)}
-          className="flex flex-col gap-2 w-full my-6"
+          className="flex flex-col gap-2 w-full my-6 max-w-xl"
         >
           {/* // subject choice */}
           <select
             name="subject"
             value={selectedSubject}
             onChange={(e) => {
-              setSelectedSubject(e.target.value);
+              const subjectName = e.target.value;
+              setSelectedSubject(subjectName);
 
               // auto-pick color from array
-              const found = subjects.find((s) => s.name === selectedSubject);
+              const found = subjects.find((s) => s.name === subjectName);
               setSelectedColor(found?.color || "#3b82f6");
             }}
             required

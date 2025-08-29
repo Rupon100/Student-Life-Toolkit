@@ -1,87 +1,3 @@
-// import React, { useState } from "react";
-// import toast from "react-hot-toast";
-
-// const Class = ({ cls, refetch }) => {
-//   const { _id, day, instructor, subject, startTime, endTime, color } = cls;
-//   const [open, setOpen] = useState(false);
-   
-
-//   const handleDelete = (id) => {
-//     console.log(id);
-//     fetch(`http://localhost:4080/class/${id}`, {
-//         method: 'DELETE'
-//     })
-//     .then(res => res.json())
-//     .then(data => {
-//         console.log(data);
-//         if(data?.deletedCount > 0){
-//             refetch();
-//             toast.success("Class is deleted!!!");
-//         }
-//     })
-//   }
-
-
-//   const handleEdit = (id) => {
-//     console.log(id);
-//     setOpen(true);
-//   }
-
-
-  
-
-//   return (
-//     <div 
-//     className="p-4  my-2 min-w-xs w-full md:min-w-xl rounded-xl shadow-md border flex flex-col gap-2 text-black"
-//       style={{ borderLeft: `8px solid ${color || "#6366f1"}` }} 
-//     >
-//       {/* Info */}
-//       <div className="flex-1 space-y-1" >
-//         <span className="inline-block px-3 py-1 mb-2 text-sm font-semibold text-white bg-indigo-500 rounded-full">
-//           {subject}
-//         </span>
-//         <p className="text-sm">📅 {day}</p>
-//         <p className="text-sm">👨‍🏫 {instructor}</p>
-//         <p className="text-sm">
-//           ⏰ {startTime} – {endTime}
-//         </p>
-//       </div>
-
-//       {/* Action buttons */}
-//       <div className="flex gap-2 justify-center mt-2">
-//         <button
-//             onClick={() => handleEdit(_id)}
-//           className="px-3 py-1 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600 transition cursor-pointer"
-//         >
-//           Edit
-//         </button>
-//         <button
-//             onClick={() => handleDelete(_id)}
-//           className="px-3 py-1 text-sm bg-red-500 text-white rounded-md hover:bg-red-600 transition cursor-pointer"
-//         >
-//           Delete
-//         </button>
-//       </div>
-
-
-
- 
-
-//     </div>
-//   );
-// };
-
-// export default Class;
-
-
-
-
-
-
-
-
-
-
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -96,6 +12,8 @@ const Class = ({ cls, refetch }) => {
     endTime,
     color
   });
+
+  console.log(color)
 
   const handleDelete = async (id) => {
     const res = await fetch(`http://localhost:4080/class/${id}`, { method: 'DELETE' });

@@ -30,6 +30,10 @@ async function run() {
 
     // collection create
     const classesCollection = client.db("StudyEase").collection("classes");
+    const budgetCollection = client.db('StudyEase').collection('budgets');
+
+
+    // -------------------------------- classes ----------------------------
 
     // post classes
     app.post("/classes", async (req, res) => {
@@ -40,7 +44,9 @@ async function run() {
     });
 
     // get all classes
-    app.get("/classes", async (req, res) => {
+    app.get("/classes/:email", async (req, res) => {
+
+      const email = req.params.email;
 
       const dayOrder = {
         Mon: 0,
@@ -54,6 +60,9 @@ async function run() {
 
       const result = await classesCollection
         .aggregate([
+          {
+            $match: {user: email}
+          },
           {
             $addFields: {
               dayIndex: {
@@ -75,6 +84,7 @@ async function run() {
     });
 
 
+     
     // delete an class
     app.delete('/class/:id', async(req, res) => {
       const id = req.params.id;
@@ -106,6 +116,24 @@ async function run() {
       const options = { upsert: true };
       
       const result = await classesCollection.updateOne(id, updateDoc, options);
+      res.send(result);
+    })
+
+
+    // ----------------------- budget tracker apis-------------------------
+
+    // add budget
+    app.post('/budget', async(req, res) => {
+      const body = req.body;
+      console.log(body)
+      const result = await budgetCollection.insertOne(body);
+      res.send(result);
+    })
+
+    // get all budget
+    app.get('/budget/:email', async(req, res) => {
+      const email = { user: req.params.email };
+      const result = await budgetCollection.find(email).toArray();
       res.send(result);
     })
 

@@ -22,7 +22,7 @@ const Dashboard = () => {
   const { data: classes, isLoading } = useQuery({
     queryKey: ["classesFirst", user?.email],
     queryFn: async () => {
-      const res = await fetch(`http://localhost:4080/classes`);
+      const res = await fetch(`http://localhost:4080/classes/${user?.email}`);
       return res.json();
     },
     // enabled: !!day && !!user?.email,
@@ -37,7 +37,7 @@ const Dashboard = () => {
     );
   }
 
-  console.log(classes[0].subject);
+  console.log(classes[0]?.subject);
 
   return (
     <div className="flex flex-col min-h-screen">
