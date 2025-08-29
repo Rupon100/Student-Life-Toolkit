@@ -137,6 +137,61 @@ async function run() {
       res.send(result);
     })
 
+    // // get all budget for graph visual presentation
+    // app.get('/budget-graph/:email', async(req, res) => {
+    //   const email = { user: req.params.email };
+      
+    //   const totals = await budgetCollection.aggregate([
+    //     { $match: email },
+    //     {
+    //       $group: {
+    //         totalIncome: { $sum: {$cond: [{$seq: ["$incomeType", "income"]}, "$amount", 0]} },
+    //         totalExpense: { $sum: {$cond: [{$seq: ["$incomeType", "expense"]}, "$amount", 0]} },
+    //       }
+    //     }
+    //   ]).toArray();
+
+    //   res.send(totals);
+
+    // })
+
+   app.get('/budget-graph/:email', async (req, res) => {
+  const email = req.params.email;
+
+  try {
+    const totals = await budgetCollection.aggregate([
+      { $match: { user: email } },
+
+      // Convert amount to number first
+      {
+        $addFields: {
+          amountNum: { $toDouble: "$amount" }
+        }
+      },
+
+      // Now group
+      {
+        $group: {
+          _id: null,
+          totalExpense: {
+            $sum: { $cond: [{ $eq: ["$incomeType", "expense"] }, "$amountNum", 0] }
+          },
+          totalSaving: {
+            $sum: { $cond: [{ $eq: ["$incomeType", "saving"] }, "$amountNum", 0] }
+          }
+        }
+      }
+    ]).toArray();
+
+    res.send(totals[0] || { totalIncome: 0, totalExpense: 0, totalSaving: 0 });
+  } catch (error) {
+    console.error("Aggregation error:", error);
+    res.status(500).send({ message: "Something went wrong" });
+  }
+});
+
+
+
 
 
     await client.db("admin").command({ ping: 1 });

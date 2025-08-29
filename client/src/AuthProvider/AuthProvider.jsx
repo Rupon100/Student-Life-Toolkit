@@ -7,7 +7,7 @@ export const AuthContext = createContext();
 const AuthProvider = ({children}) => {
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
-
+    const [budgtsDetails, setBudgetDetails] = useState([]);
 
     // register
     const createUser = (email, pass) => {
@@ -43,6 +43,7 @@ const AuthProvider = ({children}) => {
         createUser,
         loginUser,
         logout,
+        budgtsDetails, setBudgetDetails
     }
 
     return (

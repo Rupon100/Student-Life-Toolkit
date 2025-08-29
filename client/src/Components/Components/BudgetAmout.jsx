@@ -3,9 +3,11 @@ import React from "react";
 import { NavLink } from "react-router";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import useAuth from "../../AuthProvider/useAuth";
+import SingleBudget from "./SingleBudget";
+import BudgetGraph from "./BudgetGraph";
 
 const BudgetAmout = () => {
-  const { user } = useAuth();
+  const { user,setBudgetDetails } = useAuth();
 
   const { data: budgets, isLoading } = useQuery({
     queryKey: ["budget", user?.email],
@@ -15,7 +17,10 @@ const BudgetAmout = () => {
     },
   });
 
+  setBudgetDetails(budgets);
   console.log(budgets);
+
+
 
   return (
     <div className="border rounded-xl p-4">
@@ -29,14 +34,39 @@ const BudgetAmout = () => {
           </Tab>
         </TabList>
 
+        {/* tab panel for budget graph */}
         <TabPanel>
-          <h2>Any content 1</h2>
+          <BudgetGraph></BudgetGraph>
         </TabPanel>
+
+        {/* tab panel for budget details */}
         <TabPanel>
           {isLoading ? (
             <span className="loading loading-spinner loading-md"></span>
           ) : budgets && budgets.length > 0 ? (
-            <h1>Total Entries: {budgets.length}</h1>
+            <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 m-4">
+              <table className="table">
+                {/* head */}
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Type</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {budgets.map((budget, i) => (
+                    <SingleBudget
+                      key={budget?._id}
+                      budget={budget}
+                      index={i}
+                    ></SingleBudget>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           ) : (
             <h2>No Data available</h2>
           )}
