@@ -37,9 +37,9 @@ function App() {
                 </PrivateRoute>
               }
             ></Route>
-            <Route path="/budget" element={<Budget></Budget>}></Route>
-            <Route path="/planner" element={<Planner></Planner>}></Route>
-            <Route path="/quiz" element={<Quiz></Quiz>}></Route>
+            <Route path="/budget" element={<PrivateRoute><Budget></Budget></PrivateRoute>}></Route>
+            <Route path="/planner" element={<PrivateRoute><Planner></Planner></PrivateRoute>}></Route>
+            <Route path="/quiz" element={<PrivateRoute><Quiz></Quiz></PrivateRoute>}></Route>
             <Route path="/login" element={<Login></Login>}></Route>
             <Route path="/signin" element={<Register></Register>}></Route>
           </Routes>

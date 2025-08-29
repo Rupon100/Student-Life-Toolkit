@@ -28,6 +28,18 @@ const Dashboard = () => {
     // enabled: !!day && !!user?.email,
   });
 
+  
+  const { data: budgets, isLoading: budgetLoading } = useQuery({
+    queryKey: ["budget", user?.email],
+    queryFn: async () => {
+      const res = await fetch(`http://localhost:4080/budget/${user?.email}`);
+      return res.json(); // returns array of budget entries
+    },
+    enabled: !!user?.email,
+  });
+
+
+  // loading for classes
   if (isLoading) {
     return (
       <div className="min-h-screen flex justify-center items-center">
@@ -36,6 +48,19 @@ const Dashboard = () => {
       </div>
     );
   }
+
+
+  const totalIncome =
+    budgets
+      ?.filter((b) => b.incomeType === "income")
+      .reduce((sum, b) => sum + Number(b.amount), 0) || 0;
+
+  const totalExpense =
+    budgets
+      ?.filter((b) => b.incomeType === "expense")
+      .reduce((sum, b) => sum + Number(b.amount), 0) || 0;
+
+  const netBalance = totalIncome - totalExpense;
 
   console.log(classes[0]?.subject);
 
@@ -86,12 +111,6 @@ const Dashboard = () => {
                 />
                 <h2 className="text-lg md:text-xl font-semibold">Classes</h2>
               </div>
-              {/* <p className="text-gray-600 mt-2">
-                Next class:{" "}
-                <span className="font-medium">
-                  {classes?.[0]?.subject} {classes?.[0]?.startTime}
-                </span>
-              </p> */}
 
               <p className="text-gray-600 mt-2">
                 Next class:{" "}
@@ -120,9 +139,36 @@ const Dashboard = () => {
                 />
                 <h2 className="text-lg md:text-xl font-semibold">Budget</h2>
               </div>
-              <p className="text-gray-600 mt-2">
-                Balance: <span className="font-medium">$320</span>
-              </p>
+              {/* <p className={`mt-2 font-medium ${
+  netBalance > 0 ? "text-green-600" : netBalance < 0 ? "text-red-500" : "text-yellow-500"
+}`}>
+  {netBalance > 0
+    ? `You have $${netBalance} remaining`
+    : netBalance < 0
+    ? `Overspent by $${Math.abs(netBalance)}`
+    : "Balance is zero"}
+</p> */}
+
+              {budgetLoading ? (
+                <span className="loading loading-spinner loading-sm mt-2"></span>
+              ) : (
+                <p
+                  className={`pt-2 font-medium ${
+                    netBalance > 0
+                      ? "text-green-600"
+                      : netBalance < 0
+                      ? "text-red-500"
+                      : "text-yellow-500"
+                  }`}
+                >
+                  {netBalance > 0
+                    ? `You have $${netBalance} remaining`
+                    : netBalance < 0
+                    ? `Overspent by ${Math.abs(netBalance)}`
+                    : "No Balance!"}
+                </p>
+              )}
+
               <span className="mt-4 text-sm text-green-500 font-medium">
                 Manage Money →
               </span>

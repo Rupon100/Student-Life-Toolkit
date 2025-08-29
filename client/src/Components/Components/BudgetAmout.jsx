@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useEffect } from "react";
 import { NavLink } from "react-router";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import useAuth from "../../AuthProvider/useAuth";
@@ -7,7 +7,7 @@ import SingleBudget from "./SingleBudget";
 import BudgetGraph from "./BudgetGraph";
 
 const BudgetAmout = () => {
-  const { user,setBudgetDetails } = useAuth();
+  const { user, setBudgetDetails } = useAuth();
 
   const { data: budgets, isLoading } = useQuery({
     queryKey: ["budget", user?.email],
@@ -15,15 +15,27 @@ const BudgetAmout = () => {
       const res = await fetch(`http://localhost:4080/budget/${user?.email}`);
       return res.json();
     },
+    enabled: !!user?.email,
   });
 
-  setBudgetDetails(budgets);
+  useEffect(() => {
+    if(budgets){
+
+      setBudgetDetails(budgets);
+    }
+
+  }, [user?.email, budgets])
+
   console.log(budgets);
 
 
+  if (isLoading) {
+  return <span className="loading loading-spinner loading-md" ></span>;
+}
+
 
   return (
-    <div className="border rounded-xl p-4">
+    <div className="p-4">
       <Tabs className={`w-full flex flex-col justify-center items-center`}>
         <TabList className={`flex gap-2`}>
           <Tab>
@@ -35,7 +47,7 @@ const BudgetAmout = () => {
         </TabList>
 
         {/* tab panel for budget graph */}
-        <TabPanel>
+        <TabPanel className={`w-full`} >
           <BudgetGraph></BudgetGraph>
         </TabPanel>
 
@@ -44,8 +56,8 @@ const BudgetAmout = () => {
           {isLoading ? (
             <span className="loading loading-spinner loading-md"></span>
           ) : budgets && budgets.length > 0 ? (
-            <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 m-4">
-              <table className="table">
+            <div className="overflow-x-auto w-full rounded-box border border-base-content/5 bg-base-100 m-4 ">
+              <table className="table w-full border">
                 {/* head */}
                 <thead>
                   <tr>

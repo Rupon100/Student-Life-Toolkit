@@ -1,123 +1,95 @@
-import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import useAuth from "../../AuthProvider/useAuth";
+import { useQuery } from "@tanstack/react-query";
 import {
   BarChart,
   Bar,
-  Rectangle,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from "recharts";
+import useAuth from "../../AuthProvider/useAuth";
 
 const BudgetGraph = () => {
-  const { user, budgtsDetails } = useAuth();
+  const { user } = useAuth();
 
-  const { data: dataAmount, isLoading } = useQuery({
-    queryKey: ["budget-calculate", user?.email],
+  // fetch all budget entries
+  const { data: budgets, isLoading } = useQuery({
+    queryKey: ["budget", user?.email],
     queryFn: async () => {
-      const res = await fetch(
-        `http://localhost:4080/budget-graph/${user?.email}`
-      );
-      return res.json();
+      const res = await fetch(`http://localhost:4080/budget/${user?.email}`);
+      return res.json(); // expects array of budget entries
     },
+    enabled: !!user?.email,
   });
 
-  if(isLoading){
-    return <div><span className="loading loading-spinner loading-md" ></span></div>
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-40">
+        <span className="loading loading-spinner loading-md"></span>
+      </div>
+    );
   }
 
+  if (!budgets || budgets.length === 0) {
+    return <h2 className="text-center">No budget data available</h2>;
+  }
 
+  const chartDataMap = {};
 
-  
+  budgets.forEach((b) => {
+    if (!b.incomeType) return; // skip if type is null
+    const cat = b.category || "Other";
+    if (!chartDataMap[cat]) chartDataMap[cat] = { name: cat, income: 0, expense: 0, saving: 0 };
+    chartDataMap[cat][b.incomeType] += Number(b.amount);
+  });
 
-  console.log("data", dataAmount);
-  console.log("details: ", budgtsDetails);
+  const chartData = Object.values(chartDataMap);
 
-  const data = [
-    {
-      name: "Page A",
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
-    },
-    {
-      name: "Page B",
-      uv: 3000,
-      pv: 1398,
-      amt: 2210,
-    },
-    {
-      name: "Page C",
-      uv: 2000,
-      pv: 9800,
-      amt: 2290,
-    },
-    {
-      name: "Page D",
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: "Page E",
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
-    },
-    {
-      name: "Page F",
-      uv: 2390,
-      pv: 3800,
-      amt: 2500,
-    },
-    {
-      name: "Page G",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
-    },
-  ];
+  // --- Calculate totals ---
+  const totalIncome = budgets
+    .filter((b) => b.incomeType === "income")
+    .reduce((sum, b) => sum + Number(b.amount), 0);
+
+  const totalExpense = budgets
+    .filter((b) => b.incomeType === "expense")
+    .reduce((sum, b) => sum + Number(b.amount), 0);
+
+  // --- Color map ---
+  const COLORS = {
+    income: "#22c55e", // green
+    expense: "#ef4444", // red
+    saving: "#3b82f6", // blue
+  };
 
   return (
-    <div className="p-4">
+    <div className="p-4 w-full h-[500px] flex flex-col">
+      <ResponsiveContainer width="100%" height="80%">
+        <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip
+            formatter={(value, name) => [`$${value}`, name.charAt(0).toUpperCase() + name.slice(1)]}
+          />
+          <Bar dataKey="income" fill={COLORS.income} radius={[4, 4, 0, 0]} />
+          <Bar dataKey="expense" fill={COLORS.expense} radius={[4, 4, 0, 0]} />
+          <Bar dataKey="saving" fill={COLORS.saving} radius={[4, 4, 0, 0]} />
+        </BarChart>
+      </ResponsiveContainer>
 
-        {/* direction  */}
-        <div className="flex" >
-            <div className="order-2 flex items-center btn btn-sm bg-red-500 text-white">
-                <div className="" >Expense</div>
-                <span>{dataAmount?.totalExpense}</span>
-            </div>
-            <div className="flex items-center btn btn-sm bg-green-500 text-white">
-                <div className="" >Saving</div>
-                <span>{dataAmount?.totalSaving}</span>
-            </div>
+      {/* Custom totals / legend */}
+      <div className="flex justify-center gap-4 mt-4">
+        <div className="flex items-center gap-2 bg-green-500 text-white px-4 py-1 rounded">
+          <span className="w-3 h-3 block rounded-full bg-white"></span>
+          <span>Income: ${totalIncome}</span>
         </div>
-
-     <ResponsiveContainer width="100%" height="100%">
-      <BarChart
-        width={500}
-        height={300}
-        data={data}
-        margin={{
-          top: 5,
-          right: 30,
-          left: 20,
-          bottom: 5,
-        }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Bar dataKey="pv" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue" />} />
-        <Bar dataKey="uv" fill="#82ca9d" activeBar={<Rectangle fill="gold" stroke="purple" />} />
-      </BarChart>
-    </ResponsiveContainer>
+        <div className="flex items-center gap-2 bg-red-500 text-white px-4 py-1 rounded">
+          <span className="w-3 h-3 block rounded-full bg-white"></span>
+          <span>Expense: ${totalExpense}</span>
+        </div>
+      </div>
     </div>
   );
 };
@@ -126,4 +98,5 @@ export default BudgetGraph;
 
 
 
- 
+
+

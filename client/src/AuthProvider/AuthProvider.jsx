@@ -43,7 +43,8 @@ const AuthProvider = ({children}) => {
         createUser,
         loginUser,
         logout,
-        budgtsDetails, setBudgetDetails
+        budgtsDetails, 
+        setBudgetDetails
     }
 
     return (
