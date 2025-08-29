@@ -195,6 +195,23 @@ async function run() {
       res.send(result);
     })
 
+    app.put('/plan', async(req, res) => {
+      const { id, value} = req.body;
+      console.log(id, ' -> ', value);
+
+      const filter = { _id: new ObjectId(id) };
+      const options = {upsert: true};
+      const updateDoc = {
+        $set: {
+          status: value
+        }
+      }
+
+
+      const result = await plannerCollection.updateOne(filter, updateDoc, options);
+      res.send(result);
+
+    })
 
 
     await client.db("admin").command({ ping: 1 });

@@ -12,6 +12,7 @@ const Dashboard = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+  // logOut
   const handleLogout = () => {
     logout().then(() => {
       toast.success("Logged Out!");
@@ -19,6 +20,7 @@ const Dashboard = () => {
     });
   };
 
+   // classes 
   const { data: classes, isLoading } = useQuery({
     queryKey: ["classesFirst", user?.email],
     queryFn: async () => {
@@ -139,15 +141,6 @@ const Dashboard = () => {
                 />
                 <h2 className="text-lg md:text-xl font-semibold">Budget</h2>
               </div>
-              {/* <p className={`mt-2 font-medium ${
-  netBalance > 0 ? "text-green-600" : netBalance < 0 ? "text-red-500" : "text-yellow-500"
-}`}>
-  {netBalance > 0
-    ? `You have $${netBalance} remaining`
-    : netBalance < 0
-    ? `Overspent by $${Math.abs(netBalance)}`
-    : "Balance is zero"}
-</p> */}
 
               {budgetLoading ? (
                 <span className="loading loading-spinner loading-sm mt-2"></span>
