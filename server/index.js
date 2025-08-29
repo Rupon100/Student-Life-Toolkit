@@ -30,8 +30,8 @@ async function run() {
 
     // collection create
     const classesCollection = client.db("StudyEase").collection("classes");
-    const budgetCollection = client.db('StudyEase').collection('budgets');
-
+    const budgetCollection = client.db("StudyEase").collection("budgets");
+    const plannerCollection = client.db("StudyEase").collection("plans");
 
     // -------------------------------- classes ----------------------------
 
@@ -45,7 +45,6 @@ async function run() {
 
     // get all classes
     app.get("/classes/:email", async (req, res) => {
-
       const email = req.params.email;
 
       const dayOrder = {
@@ -61,7 +60,7 @@ async function run() {
       const result = await classesCollection
         .aggregate([
           {
-            $match: {user: email}
+            $match: { user: email },
           },
           {
             $addFields: {
@@ -83,114 +82,118 @@ async function run() {
       res.status(200).send(result);
     });
 
-
-     
     // delete an class
-    app.delete('/class/:id', async(req, res) => {
+    app.delete("/class/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const result = await classesCollection.deleteOne(filter);
       res.send(result);
-    })
-
+    });
 
     // update class
-    app.patch('/class/:id', async(req, res) => {
+    app.patch("/class/:id", async (req, res) => {
       const id = { _id: new ObjectId(req.params.id) };
       console.log(id);
 
       const { day, startTime, endTime } = req.body;
 
       console.log(req.body);
-       
 
       const updateDoc = {
         $set: {
           day: day,
           startTime: startTime,
-          endTime: endTime
-        }
+          endTime: endTime,
+        },
       };
 
-
       const options = { upsert: true };
-      
+
       const result = await classesCollection.updateOne(id, updateDoc, options);
       res.send(result);
-    })
-
+    });
 
     // ----------------------- budget tracker apis-------------------------
 
     // add budget
-    app.post('/budget', async(req, res) => {
+    app.post("/budget", async (req, res) => {
       const body = req.body;
-      console.log(body)
+      console.log(body);
       const result = await budgetCollection.insertOne(body);
       res.send(result);
-    })
+    });
 
     // get all budget
-    app.get('/budget/:email', async(req, res) => {
+    app.get("/budget/:email", async (req, res) => {
       const email = { user: req.params.email };
       const result = await budgetCollection.find(email).toArray();
       res.send(result);
-    })
+    });
 
-    // // get all budget for graph visual presentation
-    // app.get('/budget-graph/:email', async(req, res) => {
-    //   const email = { user: req.params.email };
-      
-    //   const totals = await budgetCollection.aggregate([
-    //     { $match: email },
-    //     {
-    //       $group: {
-    //         totalIncome: { $sum: {$cond: [{$seq: ["$incomeType", "income"]}, "$amount", 0]} },
-    //         totalExpense: { $sum: {$cond: [{$seq: ["$incomeType", "expense"]}, "$amount", 0]} },
-    //       }
-    //     }
-    //   ]).toArray();
+    app.get("/budget-graph/:email", async (req, res) => {
+      const email = req.params.email;
 
-    //   res.send(totals);
+      try {
+        const totals = await budgetCollection
+          .aggregate([
+            { $match: { user: email } },
 
-    // })
+            // Convert amount to number first
+            {
+              $addFields: {
+                amountNum: { $toDouble: "$amount" },
+              },
+            },
 
-   app.get('/budget-graph/:email', async (req, res) => {
-  const email = req.params.email;
+            // Now group
+            {
+              $group: {
+                _id: null,
+                totalExpense: {
+                  $sum: {
+                    $cond: [
+                      { $eq: ["$incomeType", "expense"] },
+                      "$amountNum",
+                      0,
+                    ],
+                  },
+                },
+                totalSaving: {
+                  $sum: {
+                    $cond: [
+                      { $eq: ["$incomeType", "saving"] },
+                      "$amountNum",
+                      0,
+                    ],
+                  },
+                },
+              },
+            },
+          ])
+          .toArray();
 
-  try {
-    const totals = await budgetCollection.aggregate([
-      { $match: { user: email } },
-
-      // Convert amount to number first
-      {
-        $addFields: {
-          amountNum: { $toDouble: "$amount" }
-        }
-      },
-
-      // Now group
-      {
-        $group: {
-          _id: null,
-          totalExpense: {
-            $sum: { $cond: [{ $eq: ["$incomeType", "expense"] }, "$amountNum", 0] }
-          },
-          totalSaving: {
-            $sum: { $cond: [{ $eq: ["$incomeType", "saving"] }, "$amountNum", 0] }
-          }
-        }
+        res.send(
+          totals[0] || { totalIncome: 0, totalExpense: 0, totalSaving: 0 }
+        );
+      } catch (error) {
+        console.error("Aggregation error:", error);
+        res.status(500).send({ message: "Something went wrong" });
       }
-    ]).toArray();
-
-    res.send(totals[0] || { totalIncome: 0, totalExpense: 0, totalSaving: 0 });
-  } catch (error) {
-    console.error("Aggregation error:", error);
-    res.status(500).send({ message: "Something went wrong" });
-  }
-});
+    });
 
 
+
+    // -------------------study planner---------------------
+    app.post('/plan', async(req, res) => {
+      const body = req.body;
+      const result = await plannerCollection.insertOne(body);
+      res.send(result);
+    });
+
+    app.get('/plan/:email', async(req, res) => {
+      const result = await plannerCollection.find({user: req?.params?.email}).toArray();
+      res.send(result);
+    })
 
 
 
