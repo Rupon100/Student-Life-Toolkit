@@ -1,8 +1,8 @@
 # FRONT END 
 
 #### add a good looking timer
-- Quiz with API******
-- timer + add more one feature
+- commonNav not responsive** -> budget details table 
+- timer + add more one feature (AI quiz)
 - redesign
 - make reusable component for ( common Nav)
 - make complete README

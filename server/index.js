@@ -4,9 +4,11 @@ const cors = require("cors");
 const app = express();
 app.use(express.json());
 
-app.use(cors({
-  origin: ['https://task-manager-f93cc.web.app', 'http://localhost:5173']
-}));
+app.use(
+  cors({
+    origin: ["https://task-manager-f93cc.web.app", "http://localhost:5173"],
+  })
+);
 
 require("dotenv").config();
 const port = process.env.PORT || 4080;
@@ -34,6 +36,7 @@ async function run() {
     const classesCollection = client.db("StudyEase").collection("classes");
     const budgetCollection = client.db("StudyEase").collection("budgets");
     const plannerCollection = client.db("StudyEase").collection("plans");
+    const quizesCollection = client.db("StudyEase").collection("quizes");
 
     // -------------------------------- classes ----------------------------
 
@@ -183,41 +186,61 @@ async function run() {
       }
     });
 
-
-
     // -------------------study planner---------------------
-    app.post('/plan', async(req, res) => {
+    app.post("/plan", async (req, res) => {
       const body = req.body;
       const result = await plannerCollection.insertOne(body);
       res.send(result);
     });
 
-    app.get('/plan/:email', async(req, res) => {
-      const result = await plannerCollection.find({user: req?.params?.email}).toArray();
+    app.get("/plan/:email", async (req, res) => {
+      const result = await plannerCollection
+        .find({ user: req?.params?.email })
+        .toArray();
       res.send(result);
-    })
+    });
 
-    app.put('/plan', async(req, res) => {
-      const { id, value} = req.body;
-      console.log(id, ' -> ', value);
+    app.put("/plan", async (req, res) => {
+      const { id, value } = req.body;
+      console.log(id, " -> ", value);
 
       const filter = { _id: new ObjectId(id) };
-      const options = {upsert: true};
+      const options = { upsert: true };
       const updateDoc = {
         $set: {
-          status: value
-        }
-      }
-      const result = await plannerCollection.updateOne(filter, updateDoc, options);
+          status: value,
+        },
+      };
+      const result = await plannerCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
       res.send(result);
+    });
 
-    })
+    // -------------------- Exam Q&A ----------------------
+
+    // get all the quiz answer
+    app.get("/quizes", async (req, res) => {
+      const { subject, difficulty } = req.query;
+
+      console.log(subject, ' + ', difficulty);
+
+      const filter = {};
+      if (subject) filter.subject = subject;
+      if (difficulty) filter.difficulty = difficulty;
+
+      try {
+        const result = await quizesCollection.find(filter).toArray();
+        res.send(result);
+      } catch (err) {
+        console.error(err);
+        res.status(500).send({ message: "Server error" });
+      }
+    });
 
 
-
-
-
-    
 
 
     await client.db("admin").command({ ping: 1 });
