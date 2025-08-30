@@ -4,6 +4,7 @@ import quiz from "../../assets/images/quiz.png";
 import useAuth from "../../AuthProvider/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 const Quiz = () => {
   const { user } = useAuth();
@@ -12,6 +13,9 @@ const Quiz = () => {
     subject: "",
     difficulty: "",
   });
+  const [isOpen, setIsOpen] = useState(false);
+  const [aiLoading, setAiLoading] = useState(true);
+  const [aiData, setAiData] = useState([]);
 
   const {
     data = [],
@@ -39,6 +43,35 @@ const Quiz = () => {
     refetch();
   };
 
+   
+  const handleQuizAi = async () => {
+    if (!quizs.subject || !quizs.difficulty) {
+      toast.error("Please fill up the form first!!");
+      return;
+    }
+
+    try {
+      setIsOpen(true);
+      setAiLoading(true);
+
+      const res = await axios.post(`http://localhost:4080/quiz-ai`, {
+        subject: quizs?.subject,
+        difficulty: quizs?.difficulty,
+      });
+
+      console.log(res.data);
+      setAiData(res.data.quiz); // 👈 store quiz in state
+    } catch (error) {
+      console.log(error);
+      toast.error("AI failed to generate quiz");
+    } finally {
+        refetch(); // refetch the form
+      setAiLoading(false);
+    }
+  };
+
+  console.log(isOpen);
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center p-6">
@@ -48,7 +81,7 @@ const Quiz = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center flex-start p-4 ">
+    <div className="min-h-screen flex flex-col flex-start p-4 ">
       <CommonNav></CommonNav>
       <div className="p-6 md:p-10 flex flex-col justify-center items-center w-full">
         <div className="flex justify-center items-center gap-2 mb-6">
@@ -99,6 +132,7 @@ const Quiz = () => {
           {/* Buttons */}
           <div className="flex flex-col md:flex-row gap-3 mt-6">
             <button
+              onClick={handleQuizAi}
               type="button"
               className="flex-1 bg-blue-500 text-white py-2 px-4 rounded-lg cursor-pointer transition"
             >
@@ -112,8 +146,8 @@ const Quiz = () => {
               Generate Manually
             </button>
           </div>
-          <span className="text-xs italic pt-1 text-slate-500">
-            Note: Manual answer is static for dynamic use AI generate
+          <span className="text-xs italic pt-1 text-red-500">
+            For AI: Please don’t generate too many quizzes at once — limit reached may stop it for everyone.
           </span>
         </form>
 
@@ -143,6 +177,56 @@ const Quiz = () => {
             </div>
           ))}
         </div>
+
+        {/* Modal */}
+
+        {isOpen && (
+          <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50">
+            <div className="bg-white rounded-2xl shadow-lg p-6 max-w-lg w-full max-h-[80vh] overflow-y-scroll">
+              <h2 className="text-xl font-bold mb-4 text-center">
+                AI Generated Quiz
+              </h2>
+
+              {aiLoading ? (
+                <div className="flex justify-center items-center py-10">
+                  <span className="loading loading-spinner loading-lg"></span>
+                  <p className="ml-3 text-gray-600">
+                    AI is preparing quiz be patient...
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4 ">
+                  {aiData.map((q, idx) => (
+                    <div key={idx} className="p-4 border rounded-xl bg-gray-50">
+                      <p className="font-semibold">
+                        {idx + 1}. {q.question}
+                      </p>
+                      <ul className="list-disc pl-6 mt-2 space-y-1">
+                        {q.options.map((opt, i) => (
+                          <li key={i} className="text-gray-700">
+                            {opt}
+                          </li>
+                        ))}
+                      </ul>
+                      <p className="text-green-600 font-medium mt-2">
+                        Answer: {q.correctAnswer}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="flex justify-center mt-6">
+                <button
+                  className="px-4 py-1 bg-black cursor-pointer text-white rounded-lg hover:bg-slate-600"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

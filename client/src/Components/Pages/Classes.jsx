@@ -103,7 +103,7 @@ const Classes = () => {
         {/* input form */}
         <form
           onSubmit={(e) => handleAdd(e)}
-          className="flex flex-col gap-2 w-full my-6 max-w-xl"
+          className="flex flex-col gap-2 w-full my-6 max-w-xl shadow-md p-6 rounded-xl"
         >
           {/* // subject choice */}
           <select

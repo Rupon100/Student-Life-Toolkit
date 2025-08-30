@@ -446,7 +446,7 @@ const Dashboard = () => {
                 <img className="h-6 w-6 md:h-8 md:w-8" src={quiz} alt="quiz" />
                 <h2 className="text-lg md:text-xl font-semibold">Quiz</h2>
               </div>
-              <p className="text-gray-600 mt-2">Practice questions</p>
+              <p className="text-gray-600 mt-2">Practice quiz with AI</p>
               <span className="mt-4 text-sm text-orange-500 font-medium">
                 Start Quiz →
               </span>

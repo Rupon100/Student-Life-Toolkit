@@ -48,7 +48,7 @@ const Budget = () => {
         </div>
 
         {/* form section */}
-        <div className="max-w-xl mx-auto">
+        <div className="max-w-xl mx-auto shadow-md p-6 rounded-xl">
           <form onSubmit={handleAddEntry} className="space-y-2">
             <select
               value={incomeType}

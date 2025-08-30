@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 const app = express();
 app.use(express.json());
@@ -13,8 +14,10 @@ app.use(
 require("dotenv").config();
 const port = process.env.PORT || 4080;
 
-// mongodb
+// gemini api 
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
+// mongodb
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.cne3f.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
@@ -239,6 +242,33 @@ async function run() {
         res.status(500).send({ message: "Server error" });
       }
     });
+
+
+    // quiz generate using Gemini API
+    app.post('/quiz-ai', async(req, res) => {
+      try {
+        const {subject, difficulty} = req.body; 
+
+        // we use 2.5 flash fee tier
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
+        // dynamic prompt for api
+        const prompt = `Generate 5 multiple-choice quiz questions on subject ${subject}, which is ${difficulty} . For each question, provide four options and clearly indicate the correct answer. Format the response as a JSON object with a single "quiz" key containing an array of question objects. Each question object should have "question", "options" (an array of strings), and "correctAnswer" (a string).`;
+
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+
+        const cleanedText = text.replace(/```json/g, '').replace(/```/g, '');
+        const quizData = JSON.parse(cleanedText);
+
+        res.json(quizData);
+
+      }catch(error) {
+        console.log(error);
+        res.send({error: 'Failed to generate quiz!'})
+      }
+    })
 
 
 
