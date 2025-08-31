@@ -6,6 +6,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import BudgetAmout from "../Components/BudgetAmout";
 import { useQueryClient } from "@tanstack/react-query";
+import CommonTitle from "../Common/CommonTitle";
 
 const Budget = () => {
   const { user } = useAuth();
@@ -45,16 +46,11 @@ const Budget = () => {
 
   return (
     <div className="flex flex-col min-h-screen flex-start p-4">
+      {/* common navbar */}
       <CommonNav />
       <div className="p-6 md:p-10 space-y-4">
-        <div className="flex justify-center items-center gap-2">
-          <img
-            className="h-8 w-8 md:h-10 md:w-10"
-            src={budget}
-            alt="overview"
-          />
-          <h1 className="text-2xl md:text-3xl font-bold">Budget Tracker</h1>
-        </div>
+        {/* title for page */}
+        <CommonTitle image={budget} title={`Budget Tracker`} ></CommonTitle>
 
         {/* form section */}
         <div className="max-w-xl mx-auto shadow-md p-6 rounded-xl">

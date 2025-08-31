@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import CommonNav from "../Common/CommonNav";
 import dayy from "../../assets/images/2025.png";
 import Class from "./Class";
+import CommonTitle from "../Common/CommonTitle";
 
 const Classes = () => {
   const [day, setDay] = useState(null);
@@ -85,22 +86,17 @@ const Classes = () => {
 
   return (
     <div className="min-h-screen flex flex-col flex-start p-4">
+      {/* common nav */}
       <CommonNav></CommonNav>
 
       <div className="p-6 md:p-10 flex flex-col justify-center items-center">
-        <div className="flex justify-center items-center gap-2">
-          <img
-            className="h-8 w-8 md:h-10 md:w-10"
-            src={dayy}
-            alt="overview image"
-          />
-          <h1 className="text-2xl md:text-3xl font-bold">Classes Schedule</h1>
-        </div>
+        {/* title for the page */}
+        <CommonTitle image={dayy} title={`Classes Schedule`} ></CommonTitle>
 
         {/* input form */}
         <form
           onSubmit={(e) => handleAdd(e)}
-          className="flex flex-col gap-2 w-full my-6 max-w-xl shadow-md p-6 rounded-xl"
+          className="flex flex-col gap-2 w-full  max-w-xl shadow-md p-6 rounded-xl"
         >
           {/* // subject choice */}
           <select

@@ -6,6 +6,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
+import CommonTitle from "../Common/CommonTitle";
 
 const Planner = () => {
   // Dummy tasks
@@ -85,21 +86,16 @@ const Planner = () => {
 
   return (
     <div className="min-h-screen flex flex-col flex-start p-4">
-      <CommonNav />
+      {/* common nav for page */}
+      <CommonNav></CommonNav>
       <div className="p-6 md:p-10 flex flex-col justify-center items-center w-full">
-        <div className="flex justify-center items-center gap-2">
-          <img
-            className="h-8 w-8 md:h-10 md:w-10"
-            src={planner}
-            alt="planner"
-          />
-          <h1 className="text-2xl md:text-3xl font-bold">Study Planner</h1>
-        </div>
+        {/* title for study planner */}
+        <CommonTitle image={planner} title={`Study Planner`} ></CommonTitle>
 
         {/* Add New Task Form */}
         <form
           onSubmit={handleAddTask}
-          className="w-full max-w-xl mt-6 p-4 rounded-lg  space-y-3 shadow-md"
+          className="w-full max-w-xl p-4 rounded-lg  space-y-3 shadow-md"
         >
           {/* <h2 className="font-semibold text-lg">Add New Task</h2> */}
           <input

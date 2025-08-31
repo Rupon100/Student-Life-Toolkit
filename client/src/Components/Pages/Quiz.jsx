@@ -5,6 +5,7 @@ import useAuth from "../../AuthProvider/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import axios from "axios";
+import CommonTitle from "../Common/CommonTitle";
 
 const Quiz = () => {
   const { user } = useAuth();
@@ -76,12 +77,12 @@ const Quiz = () => {
 
   return (
     <div className="min-h-screen flex flex-col flex-start p-4 ">
+      {/* common nav for all page */}
       <CommonNav></CommonNav>
+
       <div className="p-6 md:p-10 flex flex-col justify-center items-center w-full">
-        <div className="flex justify-center items-center gap-2 mb-6">
-          <img className="h-8 w-8 md:h-10 md:w-10" src={quiz} alt="planner" />
-          <h1 className="text-2xl md:text-3xl font-bold">Exam Q&A</h1>
-        </div>
+        {/* title for page */}
+        <CommonTitle image={quiz} title="Exam Q&A" ></CommonTitle>
 
         {/* form here */}
         <form className="w-full mb-4 md:mb-8 lg:mb-10 max-w-xl bg-white p-6 rounded-2xl shadow-md">
@@ -173,7 +174,6 @@ const Quiz = () => {
         </div>
 
         {/* Modal */}
-
         {isOpen && (
           <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50">
             <div className="bg-white rounded-2xl shadow-lg p-6 max-w-lg w-full max-h-[80vh] overflow-y-scroll">
