@@ -32,9 +32,6 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
-    // await client.connect();
-
     // collection create
     const classesCollection = client.db("StudyEase").collection("classes");
     const budgetCollection = client.db("StudyEase").collection("budgets");
@@ -46,7 +43,6 @@ async function run() {
     // post classes
     app.post("/classes", async (req, res) => {
       const classInfo = req.body;
-      console.log("Body for request: ", classInfo);
       const result = await classesCollection.insertOne(classInfo);
       res.status(200).send(result);
     });
@@ -101,11 +97,8 @@ async function run() {
     // update class
     app.patch("/class/:id", async (req, res) => {
       const id = { _id: new ObjectId(req.params.id) };
-      console.log(id);
 
       const { day, startTime, endTime } = req.body;
-
-      console.log(req.body);
 
       const updateDoc = {
         $set: {
@@ -126,7 +119,6 @@ async function run() {
     // add budget
     app.post("/budget", async (req, res) => {
       const body = req.body;
-      console.log(body);
       const result = await budgetCollection.insertOne(body);
       res.send(result);
     });
@@ -184,7 +176,6 @@ async function run() {
           totals[0] || { totalIncome: 0, totalExpense: 0, totalSaving: 0 }
         );
       } catch (error) {
-        console.error("Aggregation error:", error);
         res.status(500).send({ message: "Something went wrong" });
       }
     });
@@ -205,7 +196,6 @@ async function run() {
 
     app.put("/plan", async (req, res) => {
       const { id, value } = req.body;
-      console.log(id, " -> ", value);
 
       const filter = { _id: new ObjectId(id) };
       const options = { upsert: true };
@@ -228,8 +218,6 @@ async function run() {
     app.get("/quizes", async (req, res) => {
       const { subject, difficulty } = req.query;
 
-      console.log(subject, ' + ', difficulty);
-
       const filter = {};
       if (subject) filter.subject = subject;
       if (difficulty) filter.difficulty = difficulty;
@@ -238,7 +226,6 @@ async function run() {
         const result = await quizesCollection.find(filter).toArray();
         res.send(result);
       } catch (err) {
-        console.error(err);
         res.status(500).send({ message: "Server error" });
       }
     });
@@ -265,7 +252,6 @@ async function run() {
         res.json(quizData);
 
       }catch(error) {
-        console.log(error);
         res.send({error: 'Failed to generate quiz!'})
       }
     })
@@ -273,10 +259,7 @@ async function run() {
 
 
 
-    await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
+     
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();

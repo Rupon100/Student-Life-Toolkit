@@ -59,7 +59,6 @@ const Class = ({ cls, refetch }) => {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      console.log(data);
       if (data?.modifiedCount > 0) {
         toast.success("Class updated!");
         setIsModalOpen(false);

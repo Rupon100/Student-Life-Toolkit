@@ -32,8 +32,6 @@ const Quiz = () => {
     enabled: false,
   });
 
-  console.log(data);
-
   const handleQuizManual = () => {
     if (!quizs.subject || !quizs.difficulty) {
       toast.error("Please fill up the form first!!");
@@ -59,18 +57,14 @@ const Quiz = () => {
         difficulty: quizs?.difficulty,
       });
 
-      console.log(res.data);
       setAiData(res.data.quiz); // 👈 store quiz in state
     } catch (error) {
-      console.log(error);
       toast.error("AI failed to generate quiz");
     } finally {
         refetch(); // refetch the form
       setAiLoading(false);
     }
   };
-
-  console.log(isOpen);
 
   if (isLoading) {
     return (

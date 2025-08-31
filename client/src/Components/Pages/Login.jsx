@@ -14,19 +14,18 @@ const Login = () => {
     const form = e.target;
     const email = form.email.value;
     const pass =form.pass.value;
-    console.log({email, pass});
+ 
     
     // firebase login
     loginUser(email, pass)
     .then(user => {
-        console.log("user login: ", user);
+      
         toast.success('Successfully Login!')
 
         navigate(location?.state || '/');
     })
     .catch(err => {
       toast.error(err.message);
-        console.log(err.message)
     })
 
   }

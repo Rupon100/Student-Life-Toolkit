@@ -33,17 +33,13 @@ const Planner = () => {
     },
   });
 
-  useEffect(() => {
-    console.log(allTask);
-  }, [allTask]);
-
   const handleAddTask = (e) => {
     e.preventDefault();
     const task = { ...newTask, user: user?.email };
-    console.log(task);
+    
 
     axios.post("http://localhost:4080/plan", task).then((res) => {
-      console.log(res?.data);
+     
       if (res?.data?.insertedId) {
         refetch();
         setNewTask({
@@ -59,9 +55,7 @@ const Planner = () => {
 
   // handle status change for progress
   const handleStatusChange = (id, value) => {
-    console.log(`change for ${id} - ${value}`);
     axios.put(`http://localhost:4080/plan`, { id, value }).then((res) => {
-      console.log(res?.data);
       if (res?.data?.modifiedCount > 0) {
         refetch();
         toast.success("Progress Updated!!");

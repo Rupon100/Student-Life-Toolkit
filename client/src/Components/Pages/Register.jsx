@@ -7,25 +7,24 @@ const Register = () => {
   const navigate = useNavigate();
   const { createUser } = useAuth();
   const location = useLocation();
-  console.log(location?.state)
+  
 
   const handleRegister = (e) => {
     e.preventDefault();
     const form = e.target;
     const email = form.email.value;
     const pass =form.pass.value;
-    console.log({email, pass});
+    
     
     // firebase login
     createUser(email, pass)
     .then(user => {
-        console.log("user login: ", user);
         toast.success('Successfully registered & login!')
 
         navigate(location?.state || '/');
     })
     .catch(err => {
-        console.log(err.message)
+      toast.error('Something went wrong!');
     })
 
   }

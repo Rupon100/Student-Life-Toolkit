@@ -12,7 +12,7 @@ const Classes = () => {
   const [start, setStart] = useState(null);
   const [end, setEnd] = useState(null);
   const { user } = useAuth();
-  console.log(user?.email);
+ 
 
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
@@ -54,10 +54,8 @@ const Classes = () => {
       endTime,
       color: selectedColor,
     };
-    console.log(schedule);
-
+   
     axios.post("http://localhost:4080/classes", schedule).then((res) => {
-      console.log(res?.data?.insertedId);
       if (res?.data?.insertedId) {
         refetch();
         toast.success("Class added to schedule!");
@@ -82,8 +80,7 @@ const Classes = () => {
     // enabled: !!day && !!user?.email,
   });
 
-   
-  console.log("Array from DB: ", classes);
+ 
 
 
   return (

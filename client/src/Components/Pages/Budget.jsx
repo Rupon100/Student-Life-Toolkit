@@ -19,7 +19,13 @@ const Budget = () => {
     const amount = form.amount.value;
     const date = form.date.value;
 
-    const budgetEntry = { user: user?.email, incomeType, amount, category, date };
+    const budgetEntry = {
+      user: user?.email,
+      incomeType,
+      amount,
+      category,
+      date,
+    };
 
     try {
       const res = await axios.post(`http://localhost:4080/budget`, budgetEntry);
@@ -34,7 +40,6 @@ const Budget = () => {
       }
     } catch (err) {
       toast.error("Failed to add budget!");
-      console.error(err);
     }
   };
 
@@ -43,7 +48,11 @@ const Budget = () => {
       <CommonNav />
       <div className="p-6 md:p-10 space-y-4">
         <div className="flex justify-center items-center gap-2">
-          <img className="h-8 w-8 md:h-10 md:w-10" src={budget} alt="overview" />
+          <img
+            className="h-8 w-8 md:h-10 md:w-10"
+            src={budget}
+            alt="overview"
+          />
           <h1 className="text-2xl md:text-3xl font-bold">Budget Tracker</h1>
         </div>
 
@@ -78,7 +87,9 @@ const Budget = () => {
               required
             >
               <option value="">-- Select Category --</option>
-              <option value="income">Income (Scholarship, Allowance, Job)</option>
+              <option value="income">
+                Income (Scholarship, Allowance, Job)
+              </option>
               <option value="food">Food</option>
               <option value="transport">Transport</option>
               <option value="books">Books</option>
@@ -111,8 +122,3 @@ const Budget = () => {
 };
 
 export default Budget;
-
-
-
-
-

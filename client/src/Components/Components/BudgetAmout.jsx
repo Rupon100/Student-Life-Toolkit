@@ -26,8 +26,6 @@ const BudgetAmout = () => {
 
   }, [user?.email, budgets])
 
-  console.log(budgets);
-
 
   if (isLoading) {
   return <span className="loading loading-spinner loading-md" ></span>;
