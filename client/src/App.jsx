@@ -15,12 +15,14 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
+import Error from "./Components/Error/Error";
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      
       <Router>
         <div className="min-h-screen">
           <Toaster position="top-center" reverseOrder={false} />
@@ -42,9 +44,11 @@ function App() {
             <Route path="/quiz" element={<PrivateRoute><Quiz></Quiz></PrivateRoute>}></Route>
             <Route path="/login" element={<Login></Login>}></Route>
             <Route path="/signin" element={<Register></Register>}></Route>
+            <Route path="*" element={<Error></Error>} ></Route>
           </Routes>
         </div>
       </Router>
+     
     </QueryClientProvider>
   );
 }

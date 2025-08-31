@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CommonNav from "../Common/CommonNav";
 import budget from "../../assets/images/budget.png";
 import useAuth from "../../AuthProvider/useAuth";
@@ -12,8 +12,13 @@ const Budget = () => {
   const { user } = useAuth();
   const [incomeType, setIncomeType] = useState("income");
   const [category, setCategory] = useState("");
-  const queryClient = useQueryClient(); // ✅ access React Query cache
+  const queryClient = useQueryClient(); 
 
+    useEffect(() => {
+      document.title = 'StudyEase | Budget Tracker'
+    }, [])
+
+  // add a expense or income
   const handleAddEntry = async (e) => {
     e.preventDefault();
     const form = e.target;
@@ -36,7 +41,7 @@ const Budget = () => {
         form.reset();
         setIncomeType("income");
         setCategory("");
-        // ✅ Refresh the budget query so chart updates immediately
+        // Refresh the budget query so chart updates immediately
         queryClient.invalidateQueries(["budget", user?.email]);
       }
     } catch (err) {

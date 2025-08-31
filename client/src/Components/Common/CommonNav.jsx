@@ -3,31 +3,69 @@ import overview from "../../assets/images/statistics.png";
 import budget from "../../assets/images/budget.png";
 import studyPlanner from "../../assets/images/pencil.png";
 import quiz from "../../assets/images/quiz.png";
-import day from '../../assets/images//2025.png';
-import { Link, NavLink } from "react-router";
+import day from "../../assets/images/2025.png";
+import { NavLink } from "react-router";
 
 const CommonNav = () => {
   return (
-    <div className="border flex justify-center items-center gap-4 md:gap-8 w-fit mx-auto p-2 rounded-2xl">
-      <NavLink to={"/"}>
-        <img className="h-8 w-8" src={overview} alt="overview image" />
-      </NavLink>
-      <div className="divider divider-horizontal"></div>
-      <NavLink to={"/classes"}>
-        <img className="h-8 w-8" src={day} alt="overview image" />
-      </NavLink>
-      <div className="divider divider-horizontal"></div>
-      <NavLink to={"/budget"}>
-        <img className="h-8 w-8" src={budget} alt="overview image" />
-      </NavLink>
-      <div className="divider divider-horizontal"></div>
-      <NavLink to={"/planner"}>
-        <img className="h-8 w-8" src={studyPlanner} alt="overview image" />
-      </NavLink>
-      <div className="divider divider-horizontal"></div>
-      <NavLink to={"/quiz"}>
-        <img className="h-8 w-8" src={quiz} alt="overview image" />
-      </NavLink>
+    <div className="">
+      <div className="max-w-5xl border rounded-full mx-auto flex md:overflow-visible justify-between md:justify-between items-center gap-4 md:gap-6 p-2">
+        
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            `p-2 rounded-full transition ${
+              isActive ? "border border-slate-400" : "hover:bg-gray-100"
+            }`
+          }
+        >
+          <img className="h-6 w-6 md:h-8 md:w-8 object-contain" src={overview} alt="overview" />
+        </NavLink>
+
+        <NavLink
+          to="/classes"
+          className={({ isActive }) =>
+            `p-2 rounded-full transition ${
+              isActive ? "border border-slate-400" : "hover:bg-gray-100"
+            }`
+          }
+        >
+          <img className="h-6 w-6 md:h-8 md:w-8 object-contain" src={day} alt="classes" />
+        </NavLink>
+
+        <NavLink
+          to="/budget"
+          className={({ isActive }) =>
+            `p-2 rounded-full transition ${
+              isActive ? "border border-slate-400" : "hover:bg-gray-100"
+            }`
+          }
+        >
+          <img className="h-6 w-6 md:h-8 md:w-8 object-contain" src={budget} alt="budget" />
+        </NavLink>
+
+        <NavLink
+          to="/planner"
+          className={({ isActive }) =>
+            `p-2 rounded-full transition ${
+              isActive ? "border border-slate-400" : "hover:bg-gray-100"
+            }`
+          }
+        >
+          <img className="h-6 w-6 md:h-8 md:w-8 object-contain" src={studyPlanner} alt="planner" />
+        </NavLink>
+
+        <NavLink
+          to="/quiz"
+          className={({ isActive }) =>
+            `p-2 rounded-full transition ${
+              isActive ? "border border-slate-400" : "hover:bg-gray-100"
+            }`
+          }
+        >
+          <img className="h-6 w-6 md:h-8 md:w-8 object-contain" src={quiz} alt="quiz" />
+        </NavLink>
+      </div>
     </div>
   );
 };

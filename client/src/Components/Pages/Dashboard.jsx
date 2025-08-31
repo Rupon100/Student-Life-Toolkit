@@ -8,10 +8,15 @@ import quiz from "../../assets/images/quiz.png";
 import useAuth from "../../AuthProvider/useAuth";
 import toast from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 const Dashboard = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, loading } = useAuth();
   const navigate = useNavigate();
+
+    useEffect(() => {
+      document.title = 'StudyEase | Home'
+    }, [])
 
   // Fetch tasks
   const {
@@ -87,10 +92,14 @@ const Dashboard = () => {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Navbar */}
-      <nav className="bg-base-100 shadow-md p-4 flex justify-between items-center">
-        <h2 className="font-semibold text-xl">StudyEase</h2>
-        <div className="flex gap-2">
-          {user ? (
+      <nav className="w-full p-4">
+        <div className="p-4 bg-white shadow-md rounded-full max-w-5xl mx-auto flex justify-between items-center" >
+
+        <Link to={'/'} className="font-semibold text-xl">StudyEase</Link>
+        <div className="flex gap-2 items-center">
+          {
+            loading ? <span className="loading loading-spinner loading-md" ></span>
+          : user ? (
             <button onClick={handleLogout} className="btn btn-sm btn-neutral">
               Logout
             </button>
@@ -105,11 +114,16 @@ const Dashboard = () => {
             </>
           )}
         </div>
+          </div>
       </nav>
+
+
+ 
+ 
 
       {/* Main Dashboard Content */}
       <div className="flex justify-center items-center flex-1">
-        <div className="p-6 md:p-10 w-full max-w-6xl">
+        <div className="p-6 md:p-10 w-full max-w-5xl">
           <div className="flex items-center gap-4">
             <img className="h-8 w-8" src={overview} alt="overview" />
             <h1 className="text-2xl font-bold">Dashboard</h1>

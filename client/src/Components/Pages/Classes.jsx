@@ -13,10 +13,12 @@ const Classes = () => {
   const [start, setStart] = useState(null);
   const [end, setEnd] = useState(null);
   const { user } = useAuth();
- 
-
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
+
+    useEffect(() => {
+      document.title = 'StudyEase | Classes'
+    }, [])
 
   // subject color
   const subjectColors = [
@@ -40,6 +42,7 @@ const Classes = () => {
     { name: "Economics", color: subjectColors[5] },
   ];
 
+  // add a class
   const handleAdd = (e) => {
     e.preventDefault();
     const form = e.target;

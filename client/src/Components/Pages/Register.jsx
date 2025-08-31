@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import useAuth from "../../AuthProvider/useAuth";
 import toast from 'react-hot-toast';
@@ -8,6 +8,9 @@ const Register = () => {
   const { createUser } = useAuth();
   const location = useLocation();
   
+    useEffect(() => {
+      document.title = 'StudyEase | Register'
+    }, [])
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -15,12 +18,10 @@ const Register = () => {
     const email = form.email.value;
     const pass =form.pass.value;
     
-    
     // firebase login
     createUser(email, pass)
     .then(user => {
         toast.success('Successfully registered & login!')
-
         navigate(location?.state || '/');
     })
     .catch(err => {

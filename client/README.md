@@ -4,7 +4,6 @@
 - timer (simple but good)
 - re-design
 - make reusable component for ( common Nav + title + all common form -> index.js)
-- react helmet
 - make complete README
 - make 5 min present video
 

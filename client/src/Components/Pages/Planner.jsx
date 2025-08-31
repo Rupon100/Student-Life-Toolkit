@@ -9,9 +9,11 @@ import { useEffect } from "react";
 import CommonTitle from "../Common/CommonTitle";
 
 const Planner = () => {
-  // Dummy tasks
-  const [tasks, setTasks] = useState([]);
   const { user } = useAuth();
+  
+    useEffect(() => {
+      document.title = 'StudyEase | Planner'
+    }, [])
 
   // New task form state
   const [newTask, setNewTask] = useState({
@@ -38,7 +40,6 @@ const Planner = () => {
     e.preventDefault();
     const task = { ...newTask, user: user?.email };
     
-
     axios.post("http://localhost:4080/plan", task).then((res) => {
      
       if (res?.data?.insertedId) {
@@ -81,7 +82,7 @@ const Planner = () => {
 
 
   if (isLoading) {
-    return <span className="loading loading-spinner loading-md"></span>;
+    return <span className="loading loading-spinner loading-md text-center"></span>;
   }
 
   return (

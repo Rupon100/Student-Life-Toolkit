@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CommonNav from "../Common/CommonNav";
 import quiz from "../../assets/images/quiz.png";
 import useAuth from "../../AuthProvider/useAuth";
@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import axios from "axios";
 import CommonTitle from "../Common/CommonTitle";
-
+ 
 const Quiz = () => {
   const { user } = useAuth();
   const [quizs, setQuizs] = useState({
@@ -17,6 +17,12 @@ const Quiz = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [aiLoading, setAiLoading] = useState(true);
   const [aiData, setAiData] = useState([]);
+
+
+  // for title 
+  useEffect(() => {
+    document.title = 'StudyEase | Quiz Q&A'
+  }, [])
 
   const {
     data = [],
@@ -77,6 +83,8 @@ const Quiz = () => {
 
   return (
     <div className="min-h-screen flex flex-col flex-start p-4 ">
+
+
       {/* common nav for all page */}
       <CommonNav></CommonNav>
 
