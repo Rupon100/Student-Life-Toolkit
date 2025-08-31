@@ -90,7 +90,7 @@ const Quiz = () => {
         </div>
 
         {/* form here */}
-        <form className="w-full mb-4 md:mb-8 lg:mb-10 max-w-2xl bg-white p-6 rounded-2xl shadow-md">
+        <form className="w-full mb-4 md:mb-8 lg:mb-10 max-w-xl bg-white p-6 rounded-2xl shadow-md">
           {/* Subject Choice */}
           <div className="mb-4">
             <label className="block font-medium mb-2">Select Subject</label>

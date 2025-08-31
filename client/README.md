@@ -1,10 +1,10 @@
 # FRONT END 
 
 #### add a good looking timer
-- commonNav not responsive** -> budget details table 
-- timer + add more one feature (AI quiz)
-- redesign
-- make reusable component for ( common Nav + title)
+- timer (simple but good)
+- re-design
+- make reusable component for ( common Nav + title + all common form -> index.js)
+- react helmet
 - make complete README
 - make 5 min present video
 

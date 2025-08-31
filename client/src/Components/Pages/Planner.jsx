@@ -105,7 +105,7 @@ const Planner = () => {
         {/* Add New Task Form */}
         <form
           onSubmit={handleAddTask}
-          className="w-full max-w-3xl mt-6 p-4 rounded-lg  space-y-3 shadow-md"
+          className="w-full max-w-xl mt-6 p-4 rounded-lg  space-y-3 shadow-md"
         >
           {/* <h2 className="font-semibold text-lg">Add New Task</h2> */}
           <input

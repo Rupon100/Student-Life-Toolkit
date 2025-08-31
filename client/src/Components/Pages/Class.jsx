@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 
 const Class = ({ cls, refetch }) => {
   const { _id, day, instructor, subject, startTime, endTime, color } = cls;
@@ -10,45 +11,72 @@ const Class = ({ cls, refetch }) => {
     subject,
     startTime,
     endTime,
-    color
+    color,
   });
 
-  console.log(color)
-
+  // delete class
   const handleDelete = async (id) => {
-    const res = await fetch(`http://localhost:4080/class/${id}`, { method: 'DELETE' });
-    const data = await res.json();
-    if(data?.deletedCount > 0){
-      refetch();
-      toast.success("Class deleted!");
-    }
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this class!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = await fetch(`http://localhost:4080/class/${id}`, {
+          method: "DELETE",
+        });
+        const data = await res.json();
+
+        if (data?.deletedCount > 0) {
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your class has been deleted.",
+            icon: "success",
+          });
+          refetch();
+        }
+      }
+    });
   };
 
+  // edit modal
   const handleEdit = () => {
     setIsModalOpen(true); // open modal
   };
 
+  // update class
   const handleUpdate = async (e) => {
     e.preventDefault();
-    const res = await fetch(`http://localhost:4080/class/${_id}`, {
-      method: 'PATCH', // only updating changed fields
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData)
-    });
-    const data = await res.json();
-    console.log(data);
-    if(data?.modifiedCount > 0){
-      toast.success("Class updated!");
-      refetch();
-      setIsModalOpen(false);
+
+    try {
+      const res = await fetch(`http://localhost:4080/class/${_id}`, {
+        method: "PATCH", // only updating changed fields
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      console.log(data);
+      if (data?.modifiedCount > 0) {
+        toast.success("Class updated!");
+        setIsModalOpen(false);
+        refetch();
+      }else {
+        toast.error('Nothing changes!')
+      }
+    } catch (err) {
+      toast.error("Something went wrong!");
     }
   };
 
   return (
     <div>
-      <div 
-        className="p-4  my-2 min-w-xs w-full md:min-w-xl rounded-xl shadow-md border flex flex-col gap-2 text-black"
-        style={{ borderLeft: `8px solid ${color || "#6366f1"}` }} 
+      <div
+        className="p-4  my-2 min-w-xs w-full md:min-w-2xl rounded-xl shadow-md border flex flex-col gap-2 text-black"
+        style={{ borderLeft: `10px solid ${color || "#6366f1"}` }}
       >
         {/* Info */}
         <div className="flex-1 space-y-1">
@@ -57,7 +85,9 @@ const Class = ({ cls, refetch }) => {
           </span>
           <p className="text-sm">📅 {day}</p>
           <p className="text-sm">👨‍🏫 {instructor}</p>
-          <p className="text-sm">⏰ {startTime} – {endTime}</p>
+          <p className="text-sm">
+            ⏰ {startTime} – {endTime}
+          </p>
         </div>
 
         {/* Action buttons */}
@@ -85,14 +115,18 @@ const Class = ({ cls, refetch }) => {
             className="bg-white p-6 rounded-lg w-96 flex flex-col gap-3"
           >
             <h2 className="text-xl font-semibold">Update Class</h2>
-            <span className="text-sm italic text-slate-300" >subject & instructor cant changeable!</span>
+            <span className="text-sm italic text-slate-300">
+              subject & instructor cant changeable!
+            </span>
 
             <input
               type="text"
               placeholder="Subject"
               readOnly
               value={formData.subject}
-              onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, subject: e.target.value })
+              }
               className="border p-2 rounded"
             />
             <input
@@ -100,12 +134,16 @@ const Class = ({ cls, refetch }) => {
               placeholder="Instructor"
               readOnly
               value={formData.instructor}
-              onChange={(e) => setFormData({ ...formData, instructor: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, instructor: e.target.value })
+              }
               className="border p-2 rounded"
             />
             <select
               value={formData.day}
-              onChange={(e) => setFormData({ ...formData, day: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, day: e.target.value })
+              }
               className="border p-2 rounded"
             >
               <option value="">Select Day</option>
@@ -121,13 +159,17 @@ const Class = ({ cls, refetch }) => {
             <input
               type="time"
               value={formData.startTime}
-              onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, startTime: e.target.value })
+              }
               className="border p-2 rounded"
             />
             <input
               type="time"
               value={formData.endTime}
-              onChange={(e) => setFormData({ ...formData, endTime: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, endTime: e.target.value })
+              }
               className="border p-2 rounded"
             />
 
@@ -154,13 +196,3 @@ const Class = ({ cls, refetch }) => {
 };
 
 export default Class;
-
-
-
-
-
-
-
-
-
-

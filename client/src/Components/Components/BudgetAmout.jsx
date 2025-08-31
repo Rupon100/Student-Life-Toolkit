@@ -35,9 +35,9 @@ const BudgetAmout = () => {
 
 
   return (
-    <div className="p-4">
-      <Tabs className={`w-full flex flex-col justify-center items-center`}>
-        <TabList className={`flex gap-2`}>
+    <div className="p-2">
+      <Tabs className={`w-full flex flex-col justify-center`}>
+        <TabList className={`flex justify-center gap-2`}>
           <Tab>
             <button className="btn btn-neutral">Budget Graph</button>
           </Tab>
@@ -52,12 +52,12 @@ const BudgetAmout = () => {
         </TabPanel>
 
         {/* tab panel for budget details */}
-        <TabPanel>
+        <TabPanel className={`flex justify-center`} >
           {isLoading ? (
             <span className="loading loading-spinner loading-md"></span>
           ) : budgets && budgets.length > 0 ? (
-            <div className="overflow-x-auto w-full rounded-box border border-base-content/5 bg-base-100 m-4 ">
-              <table className="table w-full border">
+            <div className="overflow-x-scroll w-full rounded-box border border-base-content/5 bg-base-100 m-4 ">
+              <table className="table min-w-xl overflow-x-scroll">
                 {/* head */}
                 <thead>
                   <tr>
