@@ -2,13 +2,14 @@
 
 #### add a good looking timer
 
-- pomodro timer (global or new page) - user can choose time for study break or long break
+- loading for all route (positioning -> planner, quiz, classes, budget)
+
+- gemini api request problem (for 2nd time)
 
 - make complete README
 
 - make 5 min present video
 
-- loading for all route
 
 - classes modal + advanced sort------------********
 - allocate time date and slot (planner)-----------**************

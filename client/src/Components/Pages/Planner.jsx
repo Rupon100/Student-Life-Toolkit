@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import CommonTitle from "../Common/CommonTitle";
 
 const Planner = () => {
-  const { user } = useAuth();
+  const { user,  loading: authLoading } = useAuth();
   
     useEffect(() => {
       document.title = 'StudyEase | Planner'
@@ -34,6 +34,7 @@ const Planner = () => {
       const res = await fetch(`http://localhost:4080/plan/${user?.email}`);
       return res.json();
     },
+    enabled: !!user?.email,
   });
 
   const handleAddTask = (e) => {
@@ -84,6 +85,14 @@ const Planner = () => {
   if (isLoading) {
     return <span className="loading loading-spinner loading-md text-center"></span>;
   }
+
+  if (authLoading) {
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <span className="loading loading-spinner loading-lg"></span>
+    </div>
+  );
+}
 
   return (
     <div className="min-h-screen flex flex-col flex-start p-4">

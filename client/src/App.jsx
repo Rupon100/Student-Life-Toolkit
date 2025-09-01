@@ -21,7 +21,6 @@ const queryClient = new QueryClient();
 
 function App() {
   const [timerOpen, setTimerOpen] = useState(false);
-  console.log(timerOpen);
   return (
     <QueryClientProvider client={queryClient}>
       <Router>

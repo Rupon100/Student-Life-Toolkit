@@ -7,9 +7,17 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: ["https://task-manager-f93cc.web.app", "http://localhost:5173"],
+    origin: [
+      "https://task-manager-f93cc.web.app", 
+      "http://localhost:5173", 
+      "http://localhost:4080"],
   })
 );
+
+ 
+
+
+
 
 require("dotenv").config();
 const port = process.env.PORT || 4080;
@@ -132,7 +140,6 @@ async function run() {
 
     app.get("/budget-graph/:email", async (req, res) => {
       const email = req.params.email;
-
       try {
         const totals = await budgetCollection
           .aggregate([
@@ -236,7 +243,7 @@ async function run() {
       try {
         const {subject, difficulty} = req.body; 
 
-        // we use 2.5 flash fee tier
+        // 2.5 flash fee tier
         const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
         // dynamic prompt for api

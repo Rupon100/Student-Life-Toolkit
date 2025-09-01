@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import axios from "axios";
 import CommonTitle from "../Common/CommonTitle";
- 
+
 const Quiz = () => {
   const { user } = useAuth();
   const [quizs, setQuizs] = useState({
@@ -18,11 +18,10 @@ const Quiz = () => {
   const [aiLoading, setAiLoading] = useState(true);
   const [aiData, setAiData] = useState([]);
 
-
-  // for title 
+  // for title
   useEffect(() => {
-    document.title = 'StudyEase | Quiz Q&A'
-  }, [])
+    document.title = "StudyEase | Quiz Q&A";
+  }, []);
 
   const {
     data = [],
@@ -48,7 +47,6 @@ const Quiz = () => {
     refetch();
   };
 
-   
   const handleQuizAi = async () => {
     if (!quizs.subject || !quizs.difficulty) {
       toast.error("Please fill up the form first!!");
@@ -64,11 +62,11 @@ const Quiz = () => {
         difficulty: quizs?.difficulty,
       });
 
-      setAiData(res.data.quiz); // 👈 store quiz in state
+      setAiData(res.data?.quiz);
     } catch (error) {
       toast.error("AI failed to generate quiz");
     } finally {
-        refetch(); // refetch the form
+      refetch();
       setAiLoading(false);
     }
   };
@@ -83,13 +81,12 @@ const Quiz = () => {
 
   return (
     <div className="min-h-screen flex flex-col flex-start p-4 ">
-
       {/* common nav for all page */}
       <CommonNav></CommonNav>
 
       <div className="p-6 md:p-10 flex flex-col justify-center items-center w-full">
         {/* title for page */}
-        <CommonTitle image={quiz} title="Exam Q&A" ></CommonTitle>
+        <CommonTitle image={quiz} title="Exam Q&A"></CommonTitle>
 
         {/* form here */}
         <form className="w-full mb-4 md:mb-8 lg:mb-10 max-w-xl bg-white p-6 rounded-2xl shadow-md">
@@ -149,7 +146,8 @@ const Quiz = () => {
             </button>
           </div>
           <span className="text-xs italic pt-1 text-red-500">
-            For AI: Please don’t generate too many quizzes at once — limit reached may stop it for everyone.
+            For AI: Please don’t generate too many quizzes at once — limit
+            reached may stop it for everyone.
           </span>
         </form>
 

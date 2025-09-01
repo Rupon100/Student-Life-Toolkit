@@ -26,7 +26,7 @@ const BudgetGraph = () => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-40">
+      <div className="w-full h-[500px] flex justify-center items-center">
         <span className="loading loading-spinner loading-md"></span>
       </div>
     );

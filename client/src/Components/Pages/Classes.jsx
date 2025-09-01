@@ -16,9 +16,9 @@ const Classes = () => {
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
 
-    useEffect(() => {
-      document.title = 'StudyEase | Classes'
-    }, [])
+  useEffect(() => {
+    document.title = "StudyEase | Classes";
+  }, []);
 
   // subject color
   const subjectColors = [
@@ -58,7 +58,7 @@ const Classes = () => {
       endTime,
       color: selectedColor,
     };
-   
+
     axios.post("http://localhost:4080/classes", schedule).then((res) => {
       if (res?.data?.insertedId) {
         refetch();
@@ -76,16 +76,11 @@ const Classes = () => {
   } = useQuery({
     queryKey: ["classes", user?.email, day, start, end],
     queryFn: async () => {
-      const res = await fetch(
-        `http://localhost:4080/classes/${user?.email}`
-      );
+      const res = await fetch(`http://localhost:4080/classes/${user?.email}`);
       return res.json();
     },
     // enabled: !!day && !!user?.email,
   });
-
- 
-
 
   return (
     <div className="min-h-screen flex flex-col flex-start p-4">
@@ -94,7 +89,7 @@ const Classes = () => {
 
       <div className="p-6 md:p-10 flex flex-col justify-center items-center">
         {/* title for the page */}
-        <CommonTitle image={dayy} title={`Classes Schedule`} ></CommonTitle>
+        <CommonTitle image={dayy} title={`Classes Schedule`}></CommonTitle>
 
         {/* input form */}
         <form
@@ -146,7 +141,7 @@ const Classes = () => {
             <option value="Sun">Sun</option>
           </select>
           <input
-          onChange={(e) => setStart(e.target.value)}
+            onChange={(e) => setStart(e.target.value)}
             name="initial_time"
             type="time"
             required
@@ -154,7 +149,7 @@ const Classes = () => {
           />
 
           <input
-          onChange={(e) => setEnd(e.target.value)}
+            onChange={(e) => setEnd(e.target.value)}
             name="ending_time"
             type="time"
             required
@@ -169,7 +164,9 @@ const Classes = () => {
           ) : error ? (
             toast.error("Something Wrong!!")
           ) : (
-            classes?.map((cls, i) => <Class key={i} cls={cls} refetch={refetch} ></Class>)
+            classes?.map((cls, i) => (
+              <Class key={i} cls={cls} refetch={refetch}></Class>
+            ))
           )}
         </div>
       </div>
