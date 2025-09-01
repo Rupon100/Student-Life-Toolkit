@@ -69,11 +69,12 @@ const Budget = () => {
             >
               <option value="income">Income</option>
               <option value="expense">Expense</option>
-              <option value="saving">Saving</option>
+              {/* <option value="saving">Saving</option> */}
             </select>
 
             <input
               type="number"
+              min={`0`}
               name="amount"
               placeholder="Enter amount"
               className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"

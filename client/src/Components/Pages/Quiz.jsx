@@ -84,7 +84,6 @@ const Quiz = () => {
   return (
     <div className="min-h-screen flex flex-col flex-start p-4 ">
 
-
       {/* common nav for all page */}
       <CommonNav></CommonNav>
 

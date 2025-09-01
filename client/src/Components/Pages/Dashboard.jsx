@@ -117,10 +117,6 @@ const Dashboard = () => {
           </div>
       </nav>
 
-
- 
- 
-
       {/* Main Dashboard Content */}
       <div className="flex justify-center items-center flex-1">
         <div className="p-6 md:p-10 w-full max-w-5xl">

@@ -240,7 +240,7 @@ async function run() {
         const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
         // dynamic prompt for api
-        const prompt = `Generate 5 multiple-choice quiz questions on subject ${subject}, which is ${difficulty} . For each question, provide four options and clearly indicate the correct answer. Format the response as a JSON object with a single "quiz" key containing an array of question objects. Each question object should have "question", "options" (an array of strings), and "correctAnswer" (a string).`;
+        const prompt = `Generate 5 multiple-choice quiz questions on subject ${subject}, which is ${difficulty} . For each question, provide four options and clearly indicate the correct answer, give different question and answer if ask same subject and difficulty. Format the response as a JSON object with a single "quiz" key containing an array of question objects. Each question object should have "question", "options" (an array of strings), and "correctAnswer" (a string).`;
 
         const result = await model.generateContent(prompt);
         const response = await result.response;
