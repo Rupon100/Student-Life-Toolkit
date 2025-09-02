@@ -28,7 +28,10 @@ const BudgetAmout = () => {
 
 
   if (isLoading) {
-  return <span className="loading loading-spinner loading-md" ></span>;
+  return <div className="flex justify-center" >
+
+    <span className="loading loading-spinner loading-md" ></span>
+  </div>;
 }
 
 
@@ -52,7 +55,10 @@ const BudgetAmout = () => {
         {/* tab panel for budget details */}
         <TabPanel className={`flex justify-center`} >
           {isLoading ? (
+            <div className="flex justify-center" >
+
             <span className="loading loading-spinner loading-md"></span>
+            </div>
           ) : budgets && budgets.length > 0 ? (
             <div className="overflow-x-scroll w-full rounded-box border border-base-content/5 bg-base-100 m-4 ">
               <table className="table min-w-xl overflow-x-scroll">

@@ -190,6 +190,7 @@ const Class = ({ cls, refetch }) => {
           </form>
         </div>
       )}
+      
     </div>
   );
 };

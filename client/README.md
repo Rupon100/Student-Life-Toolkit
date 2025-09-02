@@ -2,11 +2,13 @@
 
 #### add a good looking timer
 
-- gemini api request problem (for 2nd time)
+- allocate time date and slot (planner)-----------************** + loading(2 times fixed this) + auto update progress when doing fill up form of main form
 
-- allocate time date and slot (planner)-----------**************
+- fix past time for class
 
 - make complete README
+
+-- double check for AI
 
 - make 5 min present video
 
