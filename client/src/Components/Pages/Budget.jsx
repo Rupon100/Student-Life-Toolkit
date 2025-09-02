@@ -34,7 +34,7 @@ const Budget = () => {
     };
 
     try {
-      const res = await axios.post(`http://localhost:4080/budget`, budgetEntry);
+      const res = await axios.post(`https://toolkit-backend-c3ua.onrender.com/budget`, budgetEntry);
 
       if (res?.data?.insertedId) {
         toast.success("Budget added to DB!");

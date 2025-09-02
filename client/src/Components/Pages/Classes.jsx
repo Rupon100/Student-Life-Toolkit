@@ -59,13 +59,15 @@ const Classes = () => {
       color: selectedColor,
     };
 
-    axios.post("http://localhost:4080/classes", schedule).then((res) => {
-      if (res?.data?.insertedId) {
-        refetch();
-        toast.success("Class added to schedule!");
-        form.reset();
-      }
-    });
+    axios
+      .post("https://toolkit-backend-c3ua.onrender.com/classes", schedule)
+      .then((res) => {
+        if (res?.data?.insertedId) {
+          refetch();
+          toast.success("Class added to schedule!");
+          form.reset();
+        }
+      });
   };
 
   const {
@@ -76,7 +78,9 @@ const Classes = () => {
   } = useQuery({
     queryKey: ["classes", user?.email, day, start, end],
     queryFn: async () => {
-      const res = await fetch(`http://localhost:4080/classes/${user?.email}`);
+      const res = await fetch(
+        `https://toolkit-backend-c3ua.onrender.com/classes/${user?.email}`
+      );
       return res.json();
     },
     // enabled: !!day && !!user?.email,

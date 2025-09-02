@@ -31,7 +31,7 @@ const Planner = () => {
   } = useQuery({
     queryKey: ["task", user?.email],
     queryFn: async () => {
-      const res = await fetch(`http://localhost:4080/plan/${user?.email}`);
+      const res = await fetch(`https://toolkit-backend-c3ua.onrender.com/plan/${user?.email}`);
       return res.json();
     },
     enabled: !!user?.email,
@@ -41,7 +41,7 @@ const Planner = () => {
     e.preventDefault();
     const task = { ...newTask, user: user?.email };
     
-    axios.post("http://localhost:4080/plan", task).then((res) => {
+    axios.post("https://toolkit-backend-c3ua.onrender.com/plan", task).then((res) => {
      
       if (res?.data?.insertedId) {
         refetch();
@@ -58,7 +58,7 @@ const Planner = () => {
 
   // handle status change for progress
   const handleStatusChange = (id, value) => {
-    axios.put(`http://localhost:4080/plan`, { id, value }).then((res) => {
+    axios.put(`https://toolkit-backend-c3ua.onrender.com/plan`, { id, value }).then((res) => {
       if (res?.data?.modifiedCount > 0) {
         refetch();
         toast.success("Progress Updated!!");

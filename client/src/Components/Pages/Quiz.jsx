@@ -31,7 +31,7 @@ const Quiz = () => {
     queryKey: ["quizs", quizs?.subject, quizs?.difficulty],
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:4080/quizes?subject=${quizs.subject}&difficulty=${quizs.difficulty}`
+        `https://toolkit-backend-c3ua.onrender.com/quizes?subject=${quizs.subject}&difficulty=${quizs.difficulty}`
       );
       return res.json();
     },
@@ -57,13 +57,14 @@ const Quiz = () => {
       setIsOpen(true);
       setAiLoading(true);
 
-      const res = await axios.post(`http://localhost:4080/quiz-ai`, {
+      const res = await axios.post(`https://toolkit-backend-c3ua.onrender.com/quiz-ai`, {
         subject: quizs?.subject,
         difficulty: quizs?.difficulty,
       });
 
       setAiData(res.data?.quiz);
     } catch (error) {
+      console.log("gemini error: ", error);
       toast.error("AI failed to generate quiz");
     } finally {
       refetch();
@@ -153,6 +154,7 @@ const Quiz = () => {
 
         {/* show mcq here */}
         <div className="w-full max-w-2xl">
+          <h2 className="text-center py-1 font-semibold md:text-2xl" >Manual Quiz</h2>
           {data.length === 0 && (
             <p className="text-gray-500 text-center mt-4">No quiz found.</p>
           )}
@@ -161,6 +163,7 @@ const Quiz = () => {
               key={singleQuiz._id}
               className="mb-4 p-4 border rounded-xl shadow-sm bg-white"
             >
+              {/* <h2 className="text-xl md:text-2xl text-center font-semibold py-1" >Dynamic MCQ</h2> */}
               <p className="font-semibold mb-2">
                 {idx + 1}. {singleQuiz.question}
               </p>
