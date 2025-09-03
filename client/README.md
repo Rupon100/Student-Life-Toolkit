@@ -2,15 +2,20 @@
 
 #### add a good looking timer
 
-- allocate time date and slot (planner)-----------************** + loading(2 times fixed this) + auto update progress when doing fill up form of main form
+- auto update progress when doing fill up form of main form --- planner -- optionally
 
-- fix past time for class
+- fix past time for class (when add just sub, instructor, date, time-> start) + if possible add a calender for show all class in calendar
+
+- for quiz -> (add short question for long or true false) && (add more subject || dynamically )
 
 - make complete README
 
--- double check for AI
 
 - make 5 min present video
+
+- dark light theme if possible
+
+- focus on KINENE 
 
 
 

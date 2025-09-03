@@ -154,7 +154,7 @@ const Quiz = () => {
 
         {/* show mcq here */}
         <div className="w-full max-w-2xl">
-          <h2 className="text-center py-1 font-semibold md:text-2xl" >Manual Quiz</h2>
+          <h2 className="text-center py-1 font-semibold md:text-2xl">Manual Quiz</h2>
           {data.length === 0 && (
             <p className="text-gray-500 text-center mt-4">No quiz found.</p>
           )}

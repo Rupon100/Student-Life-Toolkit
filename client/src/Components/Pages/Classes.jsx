@@ -46,6 +46,9 @@ const Classes = () => {
   const handleAdd = (e) => {
     e.preventDefault();
     const form = e.target;
+
+    
+
     const instructor = form.instructor.value;
     const startTime = form.initial_time.value;
     const endTime = form.ending_time.value;
@@ -162,7 +165,7 @@ const Classes = () => {
           <input className="btn btn-neutral" type="submit" value="Add" />
         </form>
 
-        <div>
+        <div className="pt-4" >
           {isLoading ? (
             <span className="loading loading-spinner loading-md"></span>
           ) : error ? (
