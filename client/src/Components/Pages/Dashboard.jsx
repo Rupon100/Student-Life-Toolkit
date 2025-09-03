@@ -120,9 +120,9 @@ const Dashboard = () => {
       {/* Main Dashboard Content */}
       <div className="flex justify-center items-center flex-1">
         <div className="p-6 md:p-10 w-full max-w-5xl">
-          <div className="flex items-center gap-4">
+          <div className="flex justify-center items-center gap-4">
             <img className="h-8 w-8" src={overview} alt="overview" />
-            <h1 className="text-2xl font-bold">Dashboard</h1>
+            <h1 className="text-2xl font-bold lg:text-3xl">Dashboard</h1>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 py-4 md:py-6">

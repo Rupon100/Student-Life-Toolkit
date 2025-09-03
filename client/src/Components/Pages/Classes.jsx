@@ -15,7 +15,7 @@ const Classes = () => {
   const { user } = useAuth();
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
-
+   
   useEffect(() => {
     document.title = "StudyEase | Classes";
   }, []);
@@ -60,7 +60,8 @@ const Classes = () => {
       color: selectedColor,
     };
 
-    axios
+    try{
+       axios
       .post("http://localhost:4080/classes", schedule)
       .then((res) => {
         if (res?.data?.insertedId) {
@@ -69,6 +70,10 @@ const Classes = () => {
           form.reset();
         }
       });
+    }catch(error){
+      toast.error("SOmething wrong! try later!")
+    } 
+   
   };
 
   const {
@@ -160,7 +165,10 @@ const Classes = () => {
             required
             className="border p-2 rounded"
           />
+ 
+          
           <input className="btn btn-neutral" type="submit" value="Add" />
+
         </form>
 
         <div className="pt-4" >

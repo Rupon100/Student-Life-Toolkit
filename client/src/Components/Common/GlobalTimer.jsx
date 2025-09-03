@@ -104,7 +104,7 @@ const GlobalTimer = ({ subjects = [] }) => {
   const progress = ((totalTime - seconds) / totalTime) * 100;
 
   return (
-    <div className="max-w-sm w-full mx-auto bg-white/30 backdrop-blur-xl border border-white/20 rounded-2xl p-6 text-center shadow-2xl">
+    <div className="max-w-sm w-full mx-auto bg-slate-300/30 backdrop-blur-xl border border-white/20 rounded-2xl p-6 text-center shadow-2xl">
       <h2 className="text-xl font-semibold mb-2">{getModeLabel()}</h2>
 
       {/* Subject selection ------ i will work on it */}
