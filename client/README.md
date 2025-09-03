@@ -46,8 +46,8 @@ Built with **React (Frontend)** and **Node.js + Express + MongoDB (Backend)**, d
 - Personalized, intelligent, and much more effective than static questions.  
 
 <div align="center">
-  <img src="./src//assets/screenshots/quiz-ai1.png" width="45%" alt="AI Quiz Screenshot 1" />
-  <img src="./src/assets/screenshots/quiz-ai2.png" width="45%" alt="AI Quiz Screenshot 2" />
+  <img src="./src//assets/screenshots/quiz-ai1.png" width="45%" height="250px" alt="AI Quiz Screenshot 1" />
+  <img src="./src/assets/screenshots/quiz-ai2.png" width="45%" height="250px" alt="AI Quiz Screenshot 2" />
 </div
 
 ---
@@ -58,8 +58,8 @@ Built with **React (Frontend)** and **Node.js + Express + MongoDB (Backend)**, d
 - Helps improve productivity, focus, and time management.  
 
 <div align="center">
-  <img src="./src//assets/screenshots/pomodro1.png" width="45%" alt="Pomodoro Screenshot 1" />
-  <img src="./src/assets/screenshots/pomodro2.png" width="45%" alt="Pomodoro Screenshot 2" />
+  <img src="./src//assets/screenshots/pomodro1.png" width="45%" height="250px" alt="Pomodoro Screenshot 1" />
+  <img src="./src/assets/screenshots/pomodro2.png" width="45%" height="250px" alt="Pomodoro Screenshot 2" />
 </div>
 
 ---
