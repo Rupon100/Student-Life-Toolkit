@@ -26,7 +26,7 @@ const Class = ({ cls, refetch }) => {
       confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const res = await fetch(`https://toolkit-backend-c3ua.onrender.com/class/${id}`, {
+        const res = await fetch(`http://localhost:4080/class/${id}`, {
           method: "DELETE",
         });
         const data = await res.json();
@@ -53,7 +53,7 @@ const Class = ({ cls, refetch }) => {
     e.preventDefault();
 
     try {
-      const res = await fetch(`https://toolkit-backend-c3ua.onrender.com/class/${_id}`, {
+      const res = await fetch(`http://localhost:4080/class/${_id}`, {
         method: "PATCH", // only updating changed fields
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -172,7 +172,7 @@ const Class = ({ cls, refetch }) => {
               className="border p-2 rounded"
             />
 
-            <div className="flex gap-2 justify-end mt-2">
+            <div className="flex gap-2 justify-center mt-2">
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}

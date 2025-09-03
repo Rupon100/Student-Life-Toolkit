@@ -34,18 +34,17 @@ const Planner = () => {
   } = useQuery({
     queryKey: ["task", user?.email],
     queryFn: async () => {
-      const res = await fetch(
-        `https://toolkit-backend-c3ua.onrender.com/plan/${user?.email}`
-      );
+      const res = await fetch(`http://localhost:4080/plan/${user?.email}`);
       return res.json();
     },
     enabled: !!user?.email,
   });
 
-  const sortedTask = [...allTask].sort((a,b) => new Date(a.deadline) - new Date(b.deadline));
+  const sortedTask = [...allTask].sort(
+    (a, b) => new Date(a.deadline) - new Date(b.deadline)
+  );
 
-
-  // task add 
+  // task add
   const handleAddTask = (e) => {
     e.preventDefault();
 
@@ -56,7 +55,7 @@ const Planner = () => {
     const task = { ...newTask, user: user?.email };
 
     axios
-      .post("https://toolkit-backend-c3ua.onrender.com/plan", task)
+      .post("http://localhost:4080/plan", task)
       .then((res) => {
         if (res?.data?.insertedId) {
           refetch();
@@ -78,7 +77,7 @@ const Planner = () => {
   // handle status change for progress
   const handleStatusChange = (id, value) => {
     axios
-      .put(`https://toolkit-backend-c3ua.onrender.com/plan`, { id, value })
+      .put(`http://localhost:4080/plan`, { id, value })
       .then((res) => {
         if (res?.data?.modifiedCount > 0) {
           refetch();
@@ -111,22 +110,8 @@ const Planner = () => {
     return diffTime >= 0 ? diffTime : null;
   };
 
-  // if (isLoading) {
-  //   return (
-  //     <span className="loading loading-spinner loading-md text-center"></span>
-  //   );
-  // }
-
-  // if (authLoading) {
-  //   return (
-  //     <div className="flex justify-center items-center h-screen">
-  //       <span className="loading loading-spinner loading-lg"></span>
-  //     </div>
-  //   );
-  // }
-
-  if(authLoading){
-        return (
+  if (authLoading) {
+    return (
       <div className="flex justify-center items-center h-screen">
         <span className="loading loading-spinner loading-lg"></span>
       </div>
@@ -192,11 +177,11 @@ const Planner = () => {
             <option value="Completed">Completed</option>
           </select>
 
-
           {/* deadline */}
           <input
             className="w-full border rounded-lg px-3 py-2"
             type="date"
+            name="status"
             value={newTask.deadline}
             onChange={(e) =>
               setNewTask({ ...newTask, deadline: e.target.value })
@@ -212,86 +197,87 @@ const Planner = () => {
           </button>
         </form>
 
+        {/* Task List */}
+        <div className="w-full max-w-3xl mt-6 space-y-4">
+          {isLoading ? (
+            <div className="flex justify-center">
+              <span className="loading loading-spinner loading-md"></span>
+            </div>
+          ) : (
+            sortedTask.map((task) => {
+              const remaining = getRemainingTime(task.deadline);
 
-{/* Task List */}
-<div className="w-full max-w-3xl mt-6 space-y-4">
-  {isLoading ? (
-    <div className="flex justify-center" >
-    <span className="loading loading-spinner loading-md" ></span>
-       
-    </div>
-  ) : (
-    sortedTask.map((task) => {
-      const remaining = getRemainingTime(task.deadline);
+              return (
+                <div
+                  key={task._id}
+                  className="border rounded-lg p-4 shadow-sm hover:shadow-md transition"
+                >
+                  {/* first row */}
+                  <div className="flex justify-between items-center">
+                    <h2 className="font-semibold text-lg">{task.subject}</h2>
+                    <span
+                      className={`px-2 py-1 rounded text-white text-sm ${
+                        task.difficulty === "Easy"
+                          ? "bg-green-400"
+                          : task.difficulty === "Medium"
+                          ? "bg-yellow-400"
+                          : "bg-red-500"
+                      }`}
+                    >
+                      {task.difficulty}
+                    </span>
+                  </div>
 
-      return (
-        <div
-          key={task._id}
-          className="border rounded-lg p-4 shadow-sm hover:shadow-md transition"
-        >
-          {/* first row */}
-          <div className="flex justify-between items-center">
-            <h2 className="font-semibold text-lg">{task.subject}</h2>
-            <span
-              className={`px-2 py-1 rounded text-white text-sm ${
-                task.difficulty === "Easy"
-                  ? "bg-green-400"
-                  : task.difficulty === "Medium"
-                  ? "bg-yellow-400"
-                  : "bg-red-500"
-              }`}
-            >
-              {task.difficulty}
-            </span>
-          </div>
+                  {/* second row */}
+                  <p className="text-gray-600">{task.task}</p>
 
-          {/* second row */}
-          <p className="text-gray-600">{task.task}</p>
+                  {/* third row----progress */}
+                  <div className="w-full bg-gray-200 h-4 rounded-full mt-2">
+                    <div
+                      className="h-4 rounded-full bg-green-500"
+                      style={{ width: `${getProgress(task.status)}%` }}
+                    ></div>
+                  </div>
 
-          {/* third row----progress */}
-          <div className="w-full bg-gray-200 h-4 rounded-full mt-2">
-            <div
-              className="h-4 rounded-full bg-green-500"
-              style={{ width: `${getProgress(task.status)}%` }}
-            ></div>
-          </div>
+                  {/* forth row value */}
+                  <p className="text-sm mt-1">
+                    {getProgress(task.status)}% completed - {task.status}
+                  </p>
 
-          {/* forth row value */}
-          <p className="text-sm mt-1">
-            {getProgress(task.status)}% completed - {task.status}
-          </p>
+                  {/* deadline content */}
+                  {task.deadline && (
+                    <p
+                      className={`text-sm mt-1 ${
+                        remaining !== null && remaining <= 2
+                          ? "text-red-500 font-semibold"
+                          : "text-gray-600"
+                      }`}
+                    >
+                      Deadline: {new Date(task.deadline).toLocaleDateString()}{" "}
+                      {remaining !== null &&
+                        `(Due in ${remaining} day${
+                          remaining === 1 ? "" : "s"
+                        })`}
+                    </p>
+                  )}
 
-          {/* deadline content */}
-          {task.deadline && (
-            <p
-              className={`text-sm mt-1 ${
-                remaining !== null && remaining <= 2
-                  ? "text-red-500 font-semibold"
-                  : "text-gray-600"
-              }`}
-            >
-              Deadline: {new Date(task.deadline).toLocaleDateString()}{" "}
-              {remaining !== null && `(Due in ${remaining} day${remaining === 1 ? "" : "s"})`}
-            </p>
+                  {/* fifth row option for status */}
+                  <select
+                    value={task.status}
+                    onChange={(e) =>
+                      handleStatusChange(task._id, e.target.value)
+                    }
+                    className="mt-2 w-full border rounded-lg px-3 py-2"
+                  >
+                    <option value="Not Started">Not Started</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                  </select>
+                </div>
+              );
+            })
           )}
-
-          {/* fifth row option for status */}
-          <select
-            value={task.status}
-            onChange={(e) => handleStatusChange(task._id, e.target.value)}
-            className="mt-2 w-full border rounded-lg px-3 py-2"
-          >
-            <option value="Not Started">Not Started</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Completed">Completed</option>
-          </select>
         </div>
-      );
-    })
-  )}
-</div>
-
-        
       </div>
     </div>
   );

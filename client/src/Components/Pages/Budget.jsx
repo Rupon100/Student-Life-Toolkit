@@ -12,18 +12,29 @@ const Budget = () => {
   const { user } = useAuth();
   const [incomeType, setIncomeType] = useState("income");
   const [category, setCategory] = useState("");
-  const queryClient = useQueryClient(); 
+  const queryClient = useQueryClient();
 
-    useEffect(() => {
-      document.title = 'StudyEase | Budget Tracker'
-    }, [])
+  useEffect(() => {
+    document.title = 'StudyEase | Budget Tracker'
+  }, []);
 
-  // add a expense or income
+  const incomeCategories = ["Scholarship", "Allowance", "Job", "Other"];
+  const expenseCategories = ["Food", "Transport", "Books", "Entertainment", "Savings", "Other"];
+
   const handleAddEntry = async (e) => {
     e.preventDefault();
     const form = e.target;
-    const amount = form.amount.value;
+    const amount = parseFloat(form.amount.value);
     const date = form.date.value;
+
+    // frontend validation
+    if (isNaN(amount) || amount <= 0) {
+      return toast.error("Please enter a valid positive amount!");
+    }
+
+    if (!date) {
+      return toast.error("Please select a valid date!");
+    }
 
     const budgetEntry = {
       user: user?.email,
@@ -34,14 +45,13 @@ const Budget = () => {
     };
 
     try {
-      const res = await axios.post(`https://toolkit-backend-c3ua.onrender.com/budget`, budgetEntry);
+      const res = await axios.post(`http://localhost:4080/budget`, budgetEntry);
 
       if (res?.data?.insertedId) {
         toast.success("Budget added to DB!");
         form.reset();
         setIncomeType("income");
         setCategory("");
-        // Refresh the budget query so chart updates immediately
         queryClient.invalidateQueries(["budget", user?.email]);
       }
     } catch (err) {
@@ -49,38 +59,46 @@ const Budget = () => {
     }
   };
 
+  // calculate min & max date for input
+  const today = new Date();
+  const maxDate = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate())
+    .toISOString()
+    .split("T")[0];
+  const minDate = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate())
+    .toISOString()
+    .split("T")[0];
+
   return (
     <div className="flex flex-col min-h-screen flex-start p-4">
-      {/* common navbar */}
       <CommonNav />
       <div className="p-6 md:p-10 space-y-4">
-        {/* title for page */}
-        <CommonTitle image={budget} title={`Budget Tracker`} ></CommonTitle>
+        <CommonTitle image={budget} title={`Budget Tracker`} />
 
-        {/* form section */}
         <div className="max-w-xl mx-auto shadow-md p-6 rounded-xl">
           <form onSubmit={handleAddEntry} className="space-y-2">
+            {/* income / expense type */}
             <select
               value={incomeType}
-              onChange={(e) => setIncomeType(e.target.value)}
+              onChange={(e) => { setIncomeType(e.target.value); setCategory(""); }}
               className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
               name="type"
               required
             >
               <option value="income">Income</option>
               <option value="expense">Expense</option>
-              {/* <option value="saving">Saving</option> */}
             </select>
 
+            {/* amount */}
             <input
               type="number"
-              min={`0`}
+              min="0"
               name="amount"
               placeholder="Enter amount"
               className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
               required
             />
 
+            {/* category - depends on type */}
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
@@ -88,21 +106,18 @@ const Budget = () => {
               className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
               required
             >
-              <option value="">-- Select Category --</option>
-              <option value="income">
-                Income (Scholarship, Allowance, Job)
-              </option>
-              <option value="food">Food</option>
-              <option value="transport">Transport</option>
-              <option value="books">Books</option>
-              <option value="entertainment">Entertainment</option>
-              <option value="savings">Savings</option>
-              <option value="other">Other</option>
+              <option value="">Select Category</option>
+              {(incomeType === "income" ? incomeCategories : expenseCategories).map((cat) => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
             </select>
 
+            {/* date - min/max */}
             <input
               type="date"
               name="date"
+              min={minDate}
+              max={maxDate}
               className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
               required
             />
@@ -124,3 +139,13 @@ const Budget = () => {
 };
 
 export default Budget;
+
+
+
+
+
+
+
+
+
+

@@ -10,7 +10,8 @@ app.use(
     origin: [
       "https://task-manager-f93cc.web.app", 
       "http://localhost:5173", 
-      "http://localhost:4080"],
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
   })
 );
 

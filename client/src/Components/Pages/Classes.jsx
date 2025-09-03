@@ -47,8 +47,6 @@ const Classes = () => {
     e.preventDefault();
     const form = e.target;
 
-    
-
     const instructor = form.instructor.value;
     const startTime = form.initial_time.value;
     const endTime = form.ending_time.value;
@@ -63,7 +61,7 @@ const Classes = () => {
     };
 
     axios
-      .post("https://toolkit-backend-c3ua.onrender.com/classes", schedule)
+      .post("http://localhost:4080/classes", schedule)
       .then((res) => {
         if (res?.data?.insertedId) {
           refetch();
@@ -82,7 +80,7 @@ const Classes = () => {
     queryKey: ["classes", user?.email, day, start, end],
     queryFn: async () => {
       const res = await fetch(
-        `https://toolkit-backend-c3ua.onrender.com/classes/${user?.email}`
+        `http://localhost:4080/classes/${user?.email}`
       );
       return res.json();
     },

@@ -25,7 +25,7 @@ const Dashboard = () => {
   } = useQuery({
     queryKey: ["tasks", user?.email],
     queryFn: async () => {
-      const res = await fetch(`https://toolkit-backend-c3ua.onrender.com/plan/${user?.email}`);
+      const res = await fetch(`http://localhost:4080/plan/${user?.email}`);
       return res.json();
     },
   });
@@ -37,7 +37,7 @@ const Dashboard = () => {
   } = useQuery({
     queryKey: ["classes", user?.email],
     queryFn: async () => {
-      const res = await fetch(`https://toolkit-backend-c3ua.onrender.com/classes/${user?.email}`);
+      const res = await fetch(`http://localhost:4080/classes/${user?.email}`);
       return res.json();
     },
   });
@@ -49,7 +49,7 @@ const Dashboard = () => {
   } = useQuery({
     queryKey: ["budgets", user?.email],
     queryFn: async () => {
-      const res = await fetch(`https://toolkit-backend-c3ua.onrender.com/budget/${user?.email}`);
+      const res = await fetch(`http://localhost:4080/budget/${user?.email}`);
       return res.json();
     },
   });

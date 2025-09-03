@@ -6,6 +6,8 @@ import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import axios from "axios";
 import CommonTitle from "../Common/CommonTitle";
+import { RingLoader } from "react-spinners";
+
 
 const Quiz = () => {
   const { user } = useAuth();
@@ -31,7 +33,7 @@ const Quiz = () => {
     queryKey: ["quizs", quizs?.subject, quizs?.difficulty],
     queryFn: async () => {
       const res = await fetch(
-        `https://toolkit-backend-c3ua.onrender.com/quizes?subject=${quizs.subject}&difficulty=${quizs.difficulty}`
+        `http://localhost:4080/quizes?subject=${quizs.subject}&difficulty=${quizs.difficulty}`
       );
       return res.json();
     },
@@ -57,7 +59,7 @@ const Quiz = () => {
       setIsOpen(true);
       setAiLoading(true);
 
-      const res = await axios.post(`https://toolkit-backend-c3ua.onrender.com/quiz-ai`, {
+      const res = await axios.post(`http://localhost:4080/quiz-ai`, {
         subject: quizs?.subject,
         difficulty: quizs?.difficulty,
       });
@@ -190,11 +192,12 @@ const Quiz = () => {
               </h2>
 
               {aiLoading ? (
-                <div className="flex justify-center items-center py-10">
-                  <span className="loading loading-spinner loading-lg"></span>
+                <div className="flex flex-col justify-center items-center py-10">
+                  {/* <span className="loading loading-spinner loading-lg"></span> */}
                   <p className="ml-3 text-gray-600">
                     AI is preparing quiz be patient...
                   </p>
+                    <RingLoader />
                 </div>
               ) : (
                 <div className="space-y-4 ">
