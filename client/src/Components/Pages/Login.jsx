@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import useAuth from "../../AuthProvider/useAuth";
 import toast from "react-hot-toast";
@@ -7,13 +7,15 @@ const Login = () => {
   const navigate = useNavigate();
   const { loginUser } = useAuth();
   const location = useLocation();
+  const [loading, setLoading] = useState(false)
 
-    useEffect(() => {
-      document.title = 'StudyEase | Login'
-    }, [])
+  useEffect(() => {
+    document.title = "StudyEase | Login";
+  }, []);
 
   const handleLogin = (e) => {
     e.preventDefault();
+    setLoading(true);
     const form = e.target;
     const email = form.email.value;
     const pass = form.pass.value;
@@ -27,7 +29,10 @@ const Login = () => {
       })
       .catch((err) => {
         toast.error(err.message);
-      });
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   };
 
   return (
@@ -64,7 +69,13 @@ const Login = () => {
                   placeholder="Password"
                 />
 
-                <button className="btn btn-neutral mt-6 w-full">Login</button>
+                <button 
+                disabled={loading}
+                className="btn btn-neutral mt-6 w-full">
+                  {
+                    loading ? 'Logging..' : 'Login'
+                  }
+                </button>
                 <span>
                   New here?{" "}
                   <Link state={location?.state} to={"/signin"} className="link">

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import useAuth from "../../AuthProvider/useAuth";
 import toast from 'react-hot-toast';
@@ -7,6 +7,7 @@ const Register = () => {
   const navigate = useNavigate();
   const { createUser } = useAuth();
   const location = useLocation();
+  const [loading, setLoading] = useState(false)
   
     useEffect(() => {
       document.title = 'StudyEase | Register'
@@ -14,6 +15,7 @@ const Register = () => {
 
   const handleRegister = (e) => {
     e.preventDefault();
+    setLoading(true)
     const form = e.target;
     const email = form.email.value;
     const pass =form.pass.value;
@@ -25,7 +27,10 @@ const Register = () => {
         navigate(location?.state || '/');
     })
     .catch(err => {
-      toast.error('Something went wrong!');
+      toast.error(err.message);
+    })
+    .finally(() => {
+      setLoading(false)
     })
 
   }
@@ -66,8 +71,12 @@ const Register = () => {
                   placeholder="Password"
                 />
 
-                <button className="btn btn-neutral mt-6 w-full">
-                  Register
+                <button 
+                disabled={loading}
+                className="btn btn-neutral mt-6 w-full">
+                  {
+                   loading ? 'Registering...' : 'Register'
+                  }
                 </button>
                 <span>
                   New here?{" "}

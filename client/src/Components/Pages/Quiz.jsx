@@ -64,6 +64,8 @@ const Quiz = () => {
         difficulty: quizs?.difficulty,
       });
 
+      console.log(res.data);
+
       setAiData(res.data?.quiz);
     } catch (error) {
       console.log("gemini error: ", error);
@@ -171,7 +173,7 @@ const Quiz = () => {
                 {idx + 1}. {singleQuiz.question}
               </p>
               <ul className="list-disc list-inside mb-2">
-                {singleQuiz.options.map((opt, i) => (
+                {singleQuiz.options?.map((opt, i) => (
                   <li key={i} className="text-gray-700 list-decimal">
                     {opt}
                   </li>
@@ -202,17 +204,17 @@ const Quiz = () => {
                 </div>
               ) : (
                 <div className="space-y-4 ">
-                  {aiData.map((q, idx) => (
+                  {aiData?.map((q, idx) => (
                     <div key={idx} className="p-4 border rounded-xl bg-gray-50">
                       <p className="font-semibold">
                         {idx + 1}. {q.question}
                       </p>
                       <ul className="list-disc pl-6 mt-2 space-y-1">
-                        {q.options.map((opt, i) => (
+                        {q.options?.map((opt, i) => (
                           <li key={i} className="text-gray-700">
                             {opt}
                           </li>
-                        ))}
+                        )) || <li className="text-gray-400">No options available</li> }
                       </ul>
                       <p className="text-green-600 font-medium mt-2">
                         Answer: {q.correctAnswer}
