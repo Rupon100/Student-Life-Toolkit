@@ -51,7 +51,7 @@ const Budget = () => {
     };
 
     try {
-      const res = await axios.post(`https://toolkit-backend-c3ua.onrender.com/budget`, budgetEntry);
+      const res = await axios.post(`https://server-nu-roan.vercel.app/budget`, budgetEntry);
 
       if (res?.data?.insertedId) {
         toast.success("Budget added to DB!");

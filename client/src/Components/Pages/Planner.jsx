@@ -36,7 +36,7 @@ const Planner = () => {
     queryKey: ["task", user?.email],
     queryFn: async () => {
       const res = await fetch(
-        `https://toolkit-backend-c3ua.onrender.com/plan/${user?.email}`
+        `https://server-nu-roan.vercel.app/plan/${user?.email}`
       );
       return res.json();
     },
@@ -60,7 +60,7 @@ const Planner = () => {
 
     try {
       const res = await axios.post(
-        "https://toolkit-backend-c3ua.onrender.com/plan",
+        "https://server-nu-roan.vercel.app/plan",
         task
       );
       if (res?.data?.insertedId) {
@@ -87,7 +87,7 @@ const Planner = () => {
   // handle status change for progress
   const handleStatusChange = (id, value) => {
     axios
-      .put(`https://toolkit-backend-c3ua.onrender.com/plan`, { id, value })
+      .put(`https://server-nu-roan.vercel.app/plan`, { id, value })
       .then((res) => {
         if (res?.data?.modifiedCount > 0) {
           refetch();

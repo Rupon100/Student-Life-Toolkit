@@ -26,6 +26,6 @@ It combines class scheduling, budgeting, study planning, and AI-powered exam pre
 ## ⚙️ Tech Stack
 - **Frontend:** React.js, TailwindCSS, React Query, rechart 
 - **Backend:** Firebase, Node.js, Express.js, MongoDB, Gemini AI API  
-- **Hosting:** Firebase (Frontend), Render (Backend)  
+- **Hosting:** Firebase (Frontend), Render (Backend) + Vercel 
 
 ---

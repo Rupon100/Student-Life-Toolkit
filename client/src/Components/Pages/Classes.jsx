@@ -64,7 +64,7 @@ const Classes = () => {
 
     try{
       await axios
-      .post("https://toolkit-backend-c3ua.onrender.com/classes", schedule)
+      .post("https://server-nu-roan.vercel.app/classes", schedule)
       .then((res) => {
         if (res?.data?.insertedId) {
           refetch();
@@ -89,7 +89,7 @@ const Classes = () => {
     queryKey: ["classes", user?.email, day, start, end],
     queryFn: async () => {
       const res = await fetch(
-        `https://toolkit-backend-c3ua.onrender.com/classes/${user?.email}`
+        `https://server-nu-roan.vercel.app/classes/${user?.email}`
       );
       return res.json();
     },

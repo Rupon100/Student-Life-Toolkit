@@ -69,6 +69,6 @@ Built with **React (Frontend)** and **Node.js + Express + MongoDB (Backend)**, d
 - **Frontend:** React, TailwindCSS, DaisyUi, TanStack Query, Axios
 - **Backend:** Firebase, Node.js, Express.js, MongoDB, CORS  
 - **AI Integration:** Google Gemini 2.5 Flash API  
-- **Deployment:** Firebase (Frontend), Render (Backend)  
+- **Deployment:** Firebase (Frontend), Render (Backend) + Vercel
 
 ---
