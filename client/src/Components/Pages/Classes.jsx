@@ -15,6 +15,7 @@ const Classes = () => {
   const { user } = useAuth();
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
+  const [isAddLoading, setIsAddLoading] = useState(false);
    
   useEffect(() => {
     document.title = "StudyEase | Classes";
@@ -43,10 +44,11 @@ const Classes = () => {
   ];
 
   // add a class
-  const handleAdd = (e) => {
+  const handleAdd = async (e) => {
     e.preventDefault();
-    const form = e.target;
+    setIsAddLoading(true)
 
+    const form = e.target;
     const instructor = form.instructor.value;
     const startTime = form.initial_time.value;
     const endTime = form.ending_time.value;
@@ -61,7 +63,7 @@ const Classes = () => {
     };
 
     try{
-       axios
+      await axios
       .post("https://toolkit-backend-c3ua.onrender.com/classes", schedule)
       .then((res) => {
         if (res?.data?.insertedId) {
@@ -72,7 +74,9 @@ const Classes = () => {
       });
     }catch(error){
       toast.error("SOmething wrong! try later!")
-    } 
+    }finally{
+      setIsAddLoading(false);
+    }
    
   };
 
@@ -167,7 +171,7 @@ const Classes = () => {
           />
  
           
-          <input className="btn btn-neutral" type="submit" value="Add" />
+          <input disabled={isAddLoading} className="btn btn-neutral" type="submit" value={isAddLoading ? 'Adding...' : 'Add'} />
 
         </form>
 

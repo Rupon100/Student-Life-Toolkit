@@ -13,7 +13,9 @@ const Budget = () => {
   const [incomeType, setIncomeType] = useState("income");
   const [category, setCategory] = useState("");
   const queryClient = useQueryClient();
+  const [isEntryLoading, setIsEntryLoading] = useState(false);
 
+  // title for page
   useEffect(() => {
     document.title = 'StudyEase | Budget Tracker'
   }, []);
@@ -21,8 +23,12 @@ const Budget = () => {
   const incomeCategories = ["Scholarship", "Allowance", "Job", "Other"];
   const expenseCategories = ["Food", "Transport", "Books", "Entertainment", "Savings", "Other"];
 
+  // add a entry value
   const handleAddEntry = async (e) => {
     e.preventDefault();
+
+    setIsEntryLoading(true);
+
     const form = e.target;
     const amount = parseFloat(form.amount.value);
     const date = form.date.value;
@@ -56,6 +62,8 @@ const Budget = () => {
       }
     } catch (err) {
       toast.error("Failed to add budget!");
+    }finally{
+      setIsEntryLoading(false);
     }
   };
 
@@ -124,9 +132,10 @@ const Budget = () => {
 
             <button
               type="submit"
+              disabled={isEntryLoading}
               className="w-full cursor-pointer btn btn-neutral text-white font-semibold py-2 rounded-lg shadow"
             >
-              Add Entry
+              { isEntryLoading ? 'Entry Adding..' : 'Add Entry' }
             </button>
           </form>
         </div>

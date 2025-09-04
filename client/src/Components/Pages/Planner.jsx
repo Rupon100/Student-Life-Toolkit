@@ -10,6 +10,7 @@ import CommonTitle from "../Common/CommonTitle";
 
 const Planner = () => {
   const { user, loading: authLoading } = useAuth();
+  const [isTaskAddLoading, setIsTaskAddLoading] = useState(false);
 
   // custom title
   useEffect(() => {
@@ -34,7 +35,9 @@ const Planner = () => {
   } = useQuery({
     queryKey: ["task", user?.email],
     queryFn: async () => {
-      const res = await fetch(`https://toolkit-backend-c3ua.onrender.com/plan/${user?.email}`);
+      const res = await fetch(
+        `https://toolkit-backend-c3ua.onrender.com/plan/${user?.email}`
+      );
       return res.json();
     },
     enabled: !!user?.email,
@@ -45,33 +48,40 @@ const Planner = () => {
   );
 
   // task add
-  const handleAddTask = (e) => {
+  const handleAddTask = async (e) => {
     e.preventDefault();
 
     if (newTask?.deadline && new Date(newTask?.deadline) < new Date()) {
       return toast.error("Deadline cannot be in past!");
     }
+    setIsTaskAddLoading(true);
 
     const task = { ...newTask, user: user?.email };
 
-    axios
-      .post("https://toolkit-backend-c3ua.onrender.com/plan", task)
-      .then((res) => {
-        if (res?.data?.insertedId) {
-          refetch();
-          setNewTask({
-            subject: "",
-            task: "",
-            difficulty: "Easy",
-            status: "Not Started",
-            deadline: "",
-          });
-          toast.success("Task added to DB!");
-        }
-      })
-      .catch(() => {
+    try {
+      const res = await axios.post(
+        "https://toolkit-backend-c3ua.onrender.com/plan",
+        task
+      );
+      if (res?.data?.insertedId) {
+        refetch();
+        setNewTask({
+          subject: "",
+          task: "",
+          difficulty: "Easy",
+          status: "Not Started",
+          priority: "Medium",
+          deadline: "",
+        });
+        toast.success("Task added to DB!");
+      } else {
         toast.error("Failed to add task!");
-      });
+      }
+    } catch (error) {
+      toast.error("Something went wrong. Try again later!");
+    } finally {
+      setIsTaskAddLoading(false);
+    }
   };
 
   // handle status change for progress
@@ -181,7 +191,6 @@ const Planner = () => {
           <input
             className="w-full border rounded-lg px-3 py-2"
             type="date"
-            name="status"
             value={newTask.deadline}
             onChange={(e) =>
               setNewTask({ ...newTask, deadline: e.target.value })
@@ -191,9 +200,10 @@ const Planner = () => {
 
           <button
             type="submit"
+            disabled={isTaskAddLoading}
             className="w-full btn btn-neutral text-white font-semibold py-2 rounded-lg"
           >
-            Add Task
+            {isTaskAddLoading ? "Adding Task..." : "Add Task"}
           </button>
         </form>
 
@@ -263,6 +273,7 @@ const Planner = () => {
 
                   {/* fifth row option for status */}
                   <select
+                  autoComplete="false"
                     value={task.status}
                     onChange={(e) =>
                       handleStatusChange(task._id, e.target.value)
@@ -284,3 +295,4 @@ const Planner = () => {
 };
 
 export default Planner;
+ 

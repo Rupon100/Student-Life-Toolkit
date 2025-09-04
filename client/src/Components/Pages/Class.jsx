@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 const Class = ({ cls, refetch }) => {
   const { _id, day, instructor, subject, startTime, endTime, color } = cls;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [updateLoading, setUpdateLoading] = useState(false)
   const [formData, setFormData] = useState({
     day,
     instructor,
@@ -52,6 +53,8 @@ const Class = ({ cls, refetch }) => {
   const handleUpdate = async (e) => {
     e.preventDefault();
 
+    setUpdateLoading(true);
+
     try {
       const res = await fetch(`https://toolkit-backend-c3ua.onrender.com/class/${_id}`, {
         method: "PATCH", // only updating changed fields
@@ -68,6 +71,8 @@ const Class = ({ cls, refetch }) => {
       }
     } catch (err) {
       toast.error("Something went wrong!");
+    }finally{
+      setUpdateLoading(false);
     }
   };
 
@@ -182,9 +187,13 @@ const Class = ({ cls, refetch }) => {
               </button>
               <button
                 type="submit"
+                disabled={updateLoading}
                 className="px-3 py-1 bg-blue-500 text-white rounded-md cursor-pointer"
               >
-                Update
+                {
+                  updateLoading ? 'Updating...' : 'Update'
+                }
+              
               </button>
             </div>
           </form>

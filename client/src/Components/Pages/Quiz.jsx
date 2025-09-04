@@ -145,6 +145,7 @@ const Quiz = () => {
               type="button"
               className="flex-1 bg-black text-white py-2 px-4 rounded-lg cursor-pointer transition"
             >
+
               Generate Manually
             </button>
           </div>
