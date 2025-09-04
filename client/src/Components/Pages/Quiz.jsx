@@ -33,7 +33,7 @@ const Quiz = () => {
     queryKey: ["quizs", quizs?.subject, quizs?.difficulty],
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:4080/quizes?subject=${quizs.subject}&difficulty=${quizs.difficulty}`
+        `https://toolkit-backend-c3ua.onrender.com/quizes?subject=${quizs.subject}&difficulty=${quizs.difficulty}`
       );
       return res.json();
     },
@@ -59,7 +59,7 @@ const Quiz = () => {
       setIsOpen(true);
       setAiLoading(true);
 
-      const res = await axios.post(`http://localhost:4080/quiz-ai`, {
+      const res = await axios.post(`https://toolkit-backend-c3ua.onrender.com/quiz-ai`, {
         subject: quizs?.subject,
         difficulty: quizs?.difficulty,
       });

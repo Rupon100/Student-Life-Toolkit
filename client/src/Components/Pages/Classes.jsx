@@ -62,7 +62,7 @@ const Classes = () => {
 
     try{
        axios
-      .post("http://localhost:4080/classes", schedule)
+      .post("https://toolkit-backend-c3ua.onrender.com/classes", schedule)
       .then((res) => {
         if (res?.data?.insertedId) {
           refetch();
@@ -85,7 +85,7 @@ const Classes = () => {
     queryKey: ["classes", user?.email, day, start, end],
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:4080/classes/${user?.email}`
+        `https://toolkit-backend-c3ua.onrender.com/classes/${user?.email}`
       );
       return res.json();
     },
