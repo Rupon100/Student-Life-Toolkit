@@ -22,7 +22,7 @@ const Dashboard = () => {
     queryKey: ["tasks", user?.email],
     queryFn: async () => {
       const res = await fetch(
-        `https://server-nu-roan.vercel.app/plan/${user?.email}`
+        `http://localhost:4080/plan/${user?.email}`
       );
       return res.json();
     },
@@ -33,7 +33,7 @@ const Dashboard = () => {
     queryKey: ["classes", user?.email],
     queryFn: async () => {
       const res = await fetch(
-        `https://server-nu-roan.vercel.app/classes/${user?.email}`
+        `http://localhost:4080/classes/${user?.email}`
       );
       return res.json();
     },
@@ -44,7 +44,7 @@ const Dashboard = () => {
     queryKey: ["budgets", user?.email],
     queryFn: async () => {
       const res = await fetch(
-        `https://server-nu-roan.vercel.app/budget/${user?.email}`
+        `http://localhost:4080/budget/${user?.email}`
       );
       return res.json();
     },

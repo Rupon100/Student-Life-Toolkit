@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import CommonTitle from "../Common/CommonTitle";
+import TaskChild from "../Components/TaskChild";
 
 const Planner = () => {
   const { user, loading: authLoading } = useAuth();
@@ -36,23 +37,24 @@ const Planner = () => {
     queryKey: ["task", user?.email],
     queryFn: async () => {
       const res = await fetch(
-        `https://server-nu-roan.vercel.app/plan/${user?.email}`
+        `http://localhost:4080/plan/${user?.email}`
       );
       return res.json();
     },
     enabled: !!user?.email,
   });
 
+  // task sorted
   const sortedTask = [...allTask].sort(
     (a, b) => new Date(a.deadline) - new Date(b.deadline)
   );
 
-  // task add
+  // task add to db
   const handleAddTask = async (e) => {
     e.preventDefault();
 
     if (newTask?.deadline && new Date(newTask?.deadline) < new Date()) {
-      return toast.error("Deadline cannot be in past!");
+      return toast.error("Deadline cannot be in past and today!");
     }
     setIsTaskAddLoading(true);
 
@@ -60,7 +62,7 @@ const Planner = () => {
 
     try {
       const res = await axios.post(
-        "https://server-nu-roan.vercel.app/plan",
+        "http://localhost:4080/plan",
         task
       );
       if (res?.data?.insertedId) {
@@ -84,10 +86,27 @@ const Planner = () => {
     }
   };
 
+  // handle delete task
+  const handleDeleteTask = async (id) => {
+    console.log("Task delete: ", id);
+
+    try{
+      const res = await axios.delete(`http://localhost:4080/task/${id}`);
+      console.log(res.data);
+      if(res?.data?.deletedCount > 0){
+        refetch();
+        return toast.success("Task deleted from the DB!");
+      }
+    }catch(err){
+      console.log(err.message)
+    }
+
+  }
+
   // handle status change for progress
   const handleStatusChange = (id, value) => {
     axios
-      .put(`https://server-nu-roan.vercel.app/plan`, { id, value })
+      .put(`http://localhost:4080/plan`, { id, value })
       .then((res) => {
         if (res?.data?.modifiedCount > 0) {
           refetch();
@@ -120,6 +139,7 @@ const Planner = () => {
     return diffTime >= 0 ? diffTime : null;
   };
 
+  // loading for auth
   if (authLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -214,80 +234,18 @@ const Planner = () => {
               <span className="loading loading-spinner loading-md"></span>
             </div>
           ) : (
-            sortedTask.map((task) => {
-              const remaining = getRemainingTime(task.deadline);
-
-              return (
-                <div
-                  key={task._id}
-                  className="border rounded-lg p-4 shadow-sm hover:shadow-md transition"
-                >
-                  {/* first row */}
-                  <div className="flex justify-between items-center">
-                    <h2 className="font-semibold text-lg">{task.subject}</h2>
-                    <span
-                      className={`px-2 py-1 rounded text-white text-sm ${
-                        task.difficulty === "Easy"
-                          ? "bg-green-400"
-                          : task.difficulty === "Medium"
-                          ? "bg-yellow-400"
-                          : "bg-red-500"
-                      }`}
-                    >
-                      {task.difficulty}
-                    </span>
-                  </div>
-
-                  {/* second row */}
-                  <p className="text-gray-600">{task.task}</p>
-
-                  {/* third row----progress */}
-                  <div className="w-full bg-gray-200 h-4 rounded-full mt-2">
-                    <div
-                      className="h-4 rounded-full bg-green-500"
-                      style={{ width: `${getProgress(task.status)}%` }}
-                    ></div>
-                  </div>
-
-                  {/* forth row value */}
-                  <p className="text-sm mt-1">
-                    {getProgress(task.status)}% completed - {task.status}
-                  </p>
-
-                  {/* deadline content */}
-                  {task.deadline && (
-                    <p
-                      className={`text-sm mt-1 ${
-                        remaining !== null && remaining <= 2
-                          ? "text-red-500 font-semibold"
-                          : "text-gray-600"
-                      }`}
-                    >
-                      Deadline: {new Date(task.deadline).toLocaleDateString()}{" "}
-                      {remaining !== null &&
-                        `(Due in ${remaining} day${
-                          remaining === 1 ? "" : "s"
-                        })`}
-                    </p>
-                  )}
-
-                  {/* fifth row option for status */}
-                  <select
-                  autoComplete="false"
-                    value={task.status}
-                    onChange={(e) =>
-                      handleStatusChange(task._id, e.target.value)
-                    }
-                    className="mt-2 w-full border rounded-lg px-3 py-2"
-                  >
-                    <option value="Not Started">Not Started</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Completed">Completed</option>
-                  </select>
-                </div>
-              );
-            })
-          )}
+            sortedTask.map((task) => (
+              <TaskChild 
+              key={task._id}
+              task={task}
+              handleStatusChange={handleStatusChange}
+              getProgress={getProgress}
+              getRemainingTime={getRemainingTime}
+              handleDeleteTask={handleDeleteTask}
+              > </TaskChild>
+          
+            )
+          ))}
         </div>
       </div>
     </div>

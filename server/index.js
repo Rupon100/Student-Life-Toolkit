@@ -18,8 +18,6 @@ app.use(
  
 
 
-
-
 require("dotenv").config();
 const port = process.env.PORT || 4080;
 
@@ -49,7 +47,7 @@ async function run() {
 
     // -------------------------------- classes ----------------------------
 
-    // post classes
+    // post classes to db
     app.post("/classes", async (req, res) => {
       const classInfo = req.body;
       const result = await classesCollection.insertOne(classInfo);
@@ -139,6 +137,7 @@ async function run() {
       res.send(result);
     });
 
+    // get all budget information base on email
     app.get("/budget-graph/:email", async (req, res) => {
       const email = req.params.email;
       try {
@@ -189,12 +188,14 @@ async function run() {
     });
 
     // -------------------study planner---------------------
+    // post a plan to db
     app.post("/plan", async (req, res) => {
       const body = req.body;
       const result = await plannerCollection.insertOne(body);
       res.send(result);
     });
 
+    // get study plan by email
     app.get("/plan/:email", async (req, res) => {
       const result = await plannerCollection
         .find({ user: req?.params?.email })
@@ -202,6 +203,7 @@ async function run() {
       res.send(result);
     });
 
+    // update the plan progress
     app.put("/plan", async (req, res) => {
       const { id, value } = req.body;
 
@@ -219,6 +221,15 @@ async function run() {
       );
       res.send(result);
     });
+
+    // delete a completed task
+    app.delete('/task/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      console.log(query)
+      const result = await plannerCollection.deleteOne(query);
+      res.send(result);
+    })
 
     // -------------------- Exam Q&A ----------------------
 

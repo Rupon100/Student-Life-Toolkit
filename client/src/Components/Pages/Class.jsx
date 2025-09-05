@@ -27,7 +27,7 @@ const Class = ({ cls, refetch }) => {
       confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const res = await fetch(`https://server-nu-roan.vercel.app/class/${id}`, {
+        const res = await fetch(`http://localhost:4080/class/${id}`, {
           method: "DELETE",
         });
         const data = await res.json();
@@ -56,7 +56,7 @@ const Class = ({ cls, refetch }) => {
     setUpdateLoading(true);
 
     try {
-      const res = await fetch(`https://server-nu-roan.vercel.app/class/${_id}`, {
+      const res = await fetch(`http://localhost:4080/class/${_id}`, {
         method: "PATCH", // only updating changed fields
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

@@ -33,7 +33,7 @@ const Quiz = () => {
     queryKey: ["quizs", quizs?.subject, quizs?.difficulty],
     queryFn: async () => {
       const res = await fetch(
-        `https://server-nu-roan.vercel.app/quizes?subject=${quizs.subject}&difficulty=${quizs.difficulty}`
+        `http://localhost:4080/quizes?subject=${quizs.subject}&difficulty=${quizs.difficulty}`
       );
       return res.json();
     },
