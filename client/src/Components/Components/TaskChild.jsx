@@ -26,7 +26,7 @@ const TaskChild = ({
   return (
     <div
       className={`border relative rounded-lg p-4 shadow-sm hover:shadow-md transition ${
-        status === "Completed" ? "bg-green-100" : ""
+        status === "Completed" ? "bg-green-50 border-green-300" : ""
       }`}
     >
       <div

@@ -8,12 +8,12 @@ import axios from "axios";
 import CommonTitle from "../Common/CommonTitle";
 import { RingLoader } from "react-spinners";
 
-
 const Quiz = () => {
   const { user } = useAuth();
   const [quizs, setQuizs] = useState({
     user: user?.email,
     subject: "",
+    type: "",
     difficulty: "",
   });
   const [isOpen, setIsOpen] = useState(false);
@@ -33,7 +33,7 @@ const Quiz = () => {
     queryKey: ["quizs", quizs?.subject, quizs?.difficulty],
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:4080/quizes?subject=${quizs.subject}&difficulty=${quizs.difficulty}`
+        `https://server-nu-roan.vercel.app/quizes?subject=${quizs?.subject}&difficulty=${quizs?.difficulty}`
       );
       return res.json();
     },
@@ -49,6 +49,7 @@ const Quiz = () => {
     refetch();
   };
 
+  // generation q&a using AI
   const handleQuizAi = async () => {
     if (!quizs.subject || !quizs.difficulty) {
       toast.error("Please fill up the form first!!");
@@ -59,19 +60,19 @@ const Quiz = () => {
       setIsOpen(true);
       setAiLoading(true);
 
-      const res = await axios.post(`https://toolkit-backend-c3ua.onrender.com/quiz-ai`, {
-        subject: quizs?.subject,
-        difficulty: quizs?.difficulty,
-      });
-
-      console.log(res.data);
+      const res = await axios.post(
+        `https://toolkit-backend-c3ua.onrender.com/quiz-ai`,
+        {
+          subject: quizs?.subject,
+          difficulty: quizs?.difficulty,
+        }
+      );
 
       setAiData(res.data?.quiz);
     } catch (error) {
-      console.log("gemini error: ", error);
       toast.error("AI failed to generate quiz");
     } finally {
-      refetch();
+      // refetch(); // for showing static quiz at the same time
       setAiLoading(false);
     }
   };
@@ -108,9 +109,13 @@ const Quiz = () => {
               className="w-full border rounded-lg p-2"
             >
               <option value="">Choose Subject</option>
-              <option value="math">Math</option>
-              <option value="science">Science</option>
-              <option value="computer">Computer</option>
+              <option value="math">Mathematics</option>
+              <option value="science">General Science</option>
+              <option value="computer">Computer Science</option>
+
+              <option value="chemistry">Chemistry</option>
+              <option value="biology">Biology</option>
+              <option value="economics">Economics</option>
             </select>
           </div>
 
@@ -147,7 +152,6 @@ const Quiz = () => {
               type="button"
               className="flex-1 bg-black text-white py-2 px-4 rounded-lg cursor-pointer transition"
             >
-
               Generate Manually
             </button>
           </div>
@@ -159,31 +163,39 @@ const Quiz = () => {
 
         {/* show mcq here */}
         <div className="w-full max-w-2xl">
-          <h2 className="text-center py-1 font-semibold md:text-2xl">Manual Quiz</h2>
+          {" "}
+          <h2 className="text-center py-1 font-semibold md:text-2xl">
+            Manual Quiz
+          </h2>{" "}
           {data.length === 0 && (
             <p className="text-gray-500 text-center mt-4">No quiz found.</p>
-          )}
+          )}{" "}
           {data.map((singleQuiz, idx) => (
             <div
               key={singleQuiz._id}
               className="mb-4 p-4 border rounded-xl shadow-sm bg-white"
             >
-              {/* <h2 className="text-xl md:text-2xl text-center font-semibold py-1" >Dynamic MCQ</h2> */}
+              {" "}
+              {/* <h2 className="text-xl md:text-2xl text-center font-semibold py-1" >Dynamic MCQ</h2> */}{" "}
               <p className="font-semibold mb-2">
-                {idx + 1}. {singleQuiz.question}
-              </p>
+                {" "}
+                {idx + 1}. {singleQuiz.question}{" "}
+              </p>{" "}
               <ul className="list-disc list-inside mb-2">
+                {" "}
                 {singleQuiz.options?.map((opt, i) => (
                   <li key={i} className="text-gray-700 list-decimal">
-                    {opt}
+                    {" "}
+                    {opt}{" "}
                   </li>
-                ))}
-              </ul>
+                ))}{" "}
+              </ul>{" "}
               <p className="text-green-500 font-medium">
-                Answer: {singleQuiz.answer}
-              </p>
+                {" "}
+                Answer: {singleQuiz.answer}{" "}
+              </p>{" "}
             </div>
-          ))}
+          ))}{" "}
         </div>
 
         {/* Modal */}
@@ -200,7 +212,7 @@ const Quiz = () => {
                   <p className="ml-3 text-gray-600">
                     AI is preparing quiz be patient...
                   </p>
-                    <RingLoader />
+                  <RingLoader />
                 </div>
               ) : (
                 <div className="space-y-4 ">
@@ -214,7 +226,11 @@ const Quiz = () => {
                           <li key={i} className="text-gray-700">
                             {opt}
                           </li>
-                        )) || <li className="text-gray-400">No options available</li> }
+                        )) || (
+                          <li className="text-gray-400">
+                            No options available
+                          </li>
+                        )}
                       </ul>
                       <p className="text-green-600 font-medium mt-2">
                         Answer: {q.correctAnswer}
@@ -239,5 +255,4 @@ const Quiz = () => {
     </div>
   );
 };
-
 export default Quiz;

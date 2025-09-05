@@ -12,7 +12,7 @@ const BudgetAmout = () => {
   const { data: budgets, isLoading } = useQuery({
     queryKey: ["budget", user?.email],
     queryFn: async () => {
-      const res = await fetch(`http://localhost:4080/budget/${user?.email}`);
+      const res = await fetch(`https://server-nu-roan.vercel.app/budget/${user?.email}`);
       return res.json();
     },
     enabled: !!user?.email,

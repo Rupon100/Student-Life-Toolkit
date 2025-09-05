@@ -1,27 +1,21 @@
 const express = require("express");
 const cors = require("cors");
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const app = express();
 app.use(express.json());
 
 app.use(
   cors({
-    origin: [
-      "https://task-manager-f93cc.web.app", 
-      "http://localhost:5173", 
-    ],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
+    origin: ["https://task-manager-f93cc.web.app", "http://localhost:5173"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   })
 );
-
- 
-
 
 require("dotenv").config();
 const port = process.env.PORT || 4080;
 
-// gemini api 
+// gemini api
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // mongodb
@@ -223,13 +217,12 @@ async function run() {
     });
 
     // delete a completed task
-    app.delete('/task/:id', async(req, res) => {
+    app.delete("/task/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
-      console.log(query)
       const result = await plannerCollection.deleteOne(query);
       res.send(result);
-    })
+    });
 
     // -------------------- Exam Q&A ----------------------
 
@@ -240,6 +233,7 @@ async function run() {
       const filter = {};
       if (subject) filter.subject = subject;
       if (difficulty) filter.difficulty = difficulty;
+      
 
       try {
         const result = await quizesCollection.find(filter).toArray();
@@ -249,11 +243,10 @@ async function run() {
       }
     });
 
-
     // quiz generate using Gemini API
-    app.post('/quiz-ai', async(req, res) => {
+    app.post("/quiz-ai", async (req, res) => {
       try {
-        const {subject, difficulty} = req.body; 
+        const { subject, difficulty } = req.body;
 
         // 2.5 flash fee tier
         const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
@@ -265,20 +258,17 @@ async function run() {
         const response = await result.response;
         const text = response.text();
 
-        const cleanedText = text.replace(/```json/g, '').replace(/```/g, '');
+        const cleanedText = text.replace(/```json/g, "").replace(/```/g, "");
         const quizData = JSON.parse(cleanedText);
 
         res.json(quizData);
-
-      }catch(error) {
-        res.send({error: 'Failed to generate quiz!'})
+      } catch (error) {
+        res.send({ error: "Failed to generate quiz!" });
       }
-    })
+    });
 
 
 
-
-     
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();

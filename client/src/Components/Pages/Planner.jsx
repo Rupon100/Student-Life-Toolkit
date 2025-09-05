@@ -37,7 +37,7 @@ const Planner = () => {
     queryKey: ["task", user?.email],
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:4080/plan/${user?.email}`
+        `https://server-nu-roan.vercel.app/plan/${user?.email}`
       );
       return res.json();
     },
@@ -62,7 +62,7 @@ const Planner = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:4080/plan",
+        "https://server-nu-roan.vercel.app/plan",
         task
       );
       if (res?.data?.insertedId) {
@@ -88,17 +88,15 @@ const Planner = () => {
 
   // handle delete task
   const handleDeleteTask = async (id) => {
-    console.log("Task delete: ", id);
-
     try{
-      const res = await axios.delete(`http://localhost:4080/task/${id}`);
-      console.log(res.data);
+      const res = await axios.delete(`https://server-nu-roan.vercel.app/task/${id}`);
       if(res?.data?.deletedCount > 0){
         refetch();
         return toast.success("Task deleted from the DB!");
       }
     }catch(err){
-      console.log(err.message)
+       
+      toast.error(err.message);
     }
 
   }
@@ -106,7 +104,7 @@ const Planner = () => {
   // handle status change for progress
   const handleStatusChange = (id, value) => {
     axios
-      .put(`http://localhost:4080/plan`, { id, value })
+      .put(`https://server-nu-roan.vercel.app/plan`, { id, value })
       .then((res) => {
         if (res?.data?.modifiedCount > 0) {
           refetch();
